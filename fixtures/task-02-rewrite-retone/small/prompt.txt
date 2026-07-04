@@ -1,0 +1,1 @@
+Rewrite the following internal message to be formal and professional, suitable for a company-wide announcement. Make it concise and remove all casual or slang phrasing while preserving every instruction and fact. Return only the rewritten message, with no preamble, commentary, or notes.

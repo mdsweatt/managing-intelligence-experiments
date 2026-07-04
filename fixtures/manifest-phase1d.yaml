@@ -1,0 +1,141 @@
+# fixtures/manifest-phase1d.yaml — Experiment 1d fixture registry (charter v0.7 §5, Experiment 1d).
+#
+# A dedicated manifest so the frozen 1a/1c registries stay pristine. Self-contained for the whole 1d
+# ladder: the 6 NEW tasks (#1/#7/#8/#15/#23/#24) plus the 3 REUSED 1c entries (#4 placebo, #6, #9 —
+# byte-identical copies of fixtures/manifest-phase1c.yaml entries; same files, same hashes, never
+# edited). Skill-off pilot run (design spine S3):
+#   uv run python -m harness.run --matrix runs/phase1d-pilot.yaml \
+#       --manifest fixtures/manifest-phase1d.yaml --usd-prior 25 --out results/
+# The full 3-arm matrix (runs/phase1d.yaml) additionally passes --skill-manifest + --neutral-manifest.
+#
+# Design (charter §5 Exp 1d; docs/phase1d-build-notes.md "design spine — LOCKED"): every new task is
+# a calibrated-loose baseline — a natural one-line request + a frozen input artifact, S band. The
+# structure lives in the (skill-on) scaffold, never in the prompt, so H5/H7 measure scaffolding, not
+# prompt verbosity. proxy.value = loose-fixture INPUT word count (prompt + input), the 1c convention:
+# the loose baseline sets no target-output proxy, so input size is the only model-independent S-band
+# selector. The paired scaffolds (fixtures/task-*/scaffold-example-DRAFT.md) stay PROVISIONAL until
+# the skill-off pilot measures each task's natural output range (labels freeze in runs/phase1d.yaml).
+#
+# STATUS: 6 new fixtures FROZEN 2026-07-02 (sha256 via harness.hashing.fixture_hash, frozen:true)
+# after the S2 owner + Gemini review (docs/phase1d-build-notes.md "S2 + neutral-block review").
+# Frozen BEFORE the skill-off pilot runs on them — the pilot must run on immutable inputs or its
+# measured natural ranges bind to nothing (invariants 3/5). `recorded_token_counts` are TBD: they are
+# a COST-ESTIMATION input measured via the free count_tokens endpoint at the pilot cost-gate (the 1c
+# precedent — counts are NOT part of the content freeze; the hash is).
+schema_version: 2
+fixtures:
+  # ================= NEW 1d tasks — frozen 2026-07-02 =================
+  # --- #1 email_reply (intended CAP) — reply to a customer refund complaint --------------------
+  - task_id: 1
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 111 }      # loose-fixture input words (prompt + incoming email)
+    files:
+      prompt: task-01-email-reply/small-loose/prompt.txt
+      input: task-01-email-reply/small/input.md
+    recorded_token_counts: { tok_hs: 162, tok_opus: 216 }   # MEASURED 2026-07-02 (free count_tokens); cost-estimation input, not part of the freeze
+    sha256: 87553aa99460edd96231419797e87c3f09d11bff38ab91a7c0f5d44aa36f8de8
+    frozen: true
+
+  # --- #7 minutes_recap (intended CAP) — recap email from a meeting transcript -----------------
+  - task_id: 7
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 237 }
+    files:
+      prompt: task-07-minutes-recap/small-loose/prompt.txt
+      input: task-07-minutes-recap/small/input.md
+    recorded_token_counts: { tok_hs: 372, tok_opus: 540 }   # MEASURED 2026-07-02 (free count_tokens)
+    sha256: 481c4e64aad7da18379513800fb7fb48f8c19c5af0debdafb00ca993f554978f
+    frozen: true
+
+  # --- #8 extract_fields (intended CAP) — structured details from an incident report -----------
+  - task_id: 8
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 178 }
+    files:
+      prompt: task-08-extract-fields/small-loose/prompt.txt
+      input: task-08-extract-fields/small/input.md
+    recorded_token_counts: { tok_hs: 262, tok_opus: 378 }   # MEASURED 2026-07-02 (free count_tokens)
+    sha256: febd4aea39b58ff120d5e6aca5da7f786a0c19205f7f344a1b69582abc8043cc
+    frozen: true
+
+  # --- #15 strategy_brief_1d (intended MANDATE, thinking-on) — growth strategy from context ----
+  # A NEW 1d fixture (not the 1a #15 artifact): same §8 task family, fresh frozen instance. The
+  # factorial runs it thinking-adaptive on Sonnet/Opus, off on Haiku (model-natural convention —
+  # Haiku has no adaptive thinking; live-verification 2026-06-16). Inversion-risk pre-committed
+  # decision rule in docs/phase1d-build-notes.md "S2 + neutral-block review".
+  - task_id: 15
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 151 }
+    files:
+      prompt: task-15-strategy-brief-1d/small-loose/prompt.txt
+      input: task-15-strategy-brief-1d/small/input.md
+    recorded_token_counts: { tok_hs: 213, tok_opus: 309 }   # MEASURED 2026-07-02 (free count_tokens)
+    sha256: 63028a6dd3b76f7945c6b0d78a9b4a48ace4fed1ca16dc4e3b439024a9590827
+    frozen: true
+
+  # --- #23 spec_draft (intended MANDATE) — subsystem requirements from a system requirement ----
+  # The owner's highest-value task ("the pasted format example IS the skill"); priciest cell,
+  # deliberately scoped to the S band (compact requirement + bounded output).
+  - task_id: 23
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 224 }
+    files:
+      prompt: task-23-spec-draft/small-loose/prompt.txt
+      input: task-23-spec-draft/small/input.md
+    recorded_token_counts: { tok_hs: 308, tok_opus: 469 }   # MEASURED 2026-07-02 (free count_tokens)
+    sha256: 69db2d79360566c2e8f69181bc7ec88bbe8cf332269dbf739bfdfac8794de305
+    frozen: true
+
+  # --- #24 status_report (intended MANDATE) — project status report from raw notes -------------
+  # Boundary-risk flagged pre-data (its own anti-invention rule caps the mandate push); pre-committed
+  # decision rule in docs/phase1d-build-notes.md "S2 + neutral-block review".
+  - task_id: 24
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 178 }
+    files:
+      prompt: task-24-status-report/small-loose/prompt.txt
+      input: task-24-status-report/small/input.md
+    recorded_token_counts: { tok_hs: 270, tok_opus: 373 }   # MEASURED 2026-07-02 (free count_tokens)
+    sha256: 76a42683b1fb14e9955030953a9d3e6b6f193bd3a356687fd52a0a0f3a172ded
+    frozen: true
+
+  # ================= REUSED 1c entries — byte-identical copies (frozen 2026-06-27/28) =================
+  # --- #4 classify_triage (PLACEBO) — the frozen Phase-1a constrained prompt, verbatim ----------
+  - task_id: 4
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 62 }
+    files: { prompt: task-04-classify-triage/small/prompt.txt }
+    recorded_token_counts: { tok_hs: 273, tok_opus: 386 }
+    sha256: 38c328e4ef3eee33968bef8d52369a77d433b9978c670d78de79914059c0a302
+    frozen: true
+
+  # --- #6 short_form_copy (measured CAP: natural 139-212w vs ≤60w) — 1c loose baseline ----------
+  - task_id: 6
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 63 }
+    files:
+      prompt: task-06-short-form-copy/small-loose/prompt.txt
+      input: task-06-short-form-copy/small/input.md
+    recorded_token_counts: { tok_hs: 92, tok_opus: 140 }
+    sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+    frozen: true
+
+  # --- #9 long_form_draft (measured MANDATE: natural 255-696w vs ~800w+6 sections) — 1c loose ---
+  - task_id: 9
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 101 }
+    files:
+      prompt: task-09-long-form-draft/small-loose/prompt.txt
+      input: task-09-long-form-draft/small/input.md
+    recorded_token_counts: { tok_hs: 145, tok_opus: 228 }
+    sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+    frozen: true

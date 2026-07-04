@@ -1,0 +1,89 @@
+# runs/phase1d.yaml — Experiment 1, Phase 1d: Determinism A/B, de-confounded + widened
+# (charter v0.7 §3 H7/H8 + §5 "Experiment 1d"; machine form of docs/SPEC.md §3c).
+#
+# A 3-arm × 3-model factorial: arm {skill-off (calibrated-loose) | neutral-system | skill-on} ×
+# model {haiku, sonnet, opus} on the 8-task cap↔mandate ladder, plus the #4 placebo (2-arm, its 1c
+# treatment). 8×3×3 + 1×3×2 = 78 cells × N=20 = 1,560 calls.
+#
+#   uv run python -m harness.run --matrix runs/phase1d.yaml \
+#       --manifest fixtures/manifest-phase1d.yaml \
+#       --skill-manifest fixtures/skills/manifest-phase1d.yaml \
+#       --neutral-manifest fixtures/neutral/manifest.yaml \
+#       --usd-prior 25 --out results/
+#
+# H7 LABELS (h7_label) — the pre-registered cap/mandate classification, set from the MEASURED
+# skill-off pilot (results/run-20260702T133840Z-64d579; analysis/output/phase1d-pilot-findings.md):
+# every scaffold demand sits clearly outside its task's natural loose range on all three models
+# (caps 20-24% below the natural MIN; mandates 23-27% above the natural MAX — the 1c #9 precedent
+# margin). #4 carries NO label (placebo) and NO neutral arm. Labels are FROZEN here BEFORE the N=20
+# run (invariant 4; charter §3 H7: no relabeling after data).
+#
+# #15 runs thinking-adaptive at the model-natural convention (Sonnet/Opus adaptive, Haiku off —
+# Haiku has no adaptive thinking, live-verification 2026-06-16), the same config the pilot measured.
+#
+# STATUS: STAGED pending the S3/S4 freezes — the 6 new skills + 6 neutral blocks it references are
+# frozen:false until the owner signs off (the harness's require_frozen gate refuses to RUN them
+# unfrozen, so this matrix cannot fire early). GATES before running (in order): owner freeze of
+# skills/neutral blocks → judge FREEZE (fixtures/judge/manifest-phase1d.yaml: micro-pilot + live
+# re-verify + pin judge_hash) → S6 pre-run cost estimate vs the ceiling below → owner go.
+# The 1c run showed 360 calls ≈ $2.94; the pilot showed thinking spend is prompt-contingent — the
+# S6 estimate, not this comment, is the number that must clear the owner gate.
+
+meta:
+  phase: "1d"
+  derived_from: docs/SPEC.md
+  n_per_cell: 20                         # flat, pre-committed, uniform with 1a/1c. Never extend per-cell.
+  universal_opus_status: included        # Opus is a factorial arm here, not an over-service add-on
+  gate: runs/phase0-calibration.yaml
+  cost_ceiling_usd: 100                  # charter §5 Exp 1d ceiling (≈$100); hard abort cap. The S6
+                                         # micro-pilot estimate must come in well under before the run.
+  verified_live: 2026-06-16              # docs/live-verification-2026-06-16.md (re-verify on model release)
+  rate_tier: { itpm: 450000, otpm: 90000, rpm: 1000, as_of: 2026-06-22 }
+
+defaults:
+  max_tokens: model_ceiling              # set to model max output; never omit. STREAM every call.
+  temperature: omit                      # never send it (constitution; verified 2026-06-16)
+  effort: high                           # Sonnet/Opus factorial arms; Haiku has no effort knob
+
+over_service:
+  rule: not_applicable_factorial
+  optional_as_used: false
+
+# VERIFIED LIVE 2026-06-16. tokenizer: tok-hs = Haiku+Sonnet (shared); tok-opus differs ~+35%.
+models:
+  haiku:  { id: claude-haiku-4-5-20251001, tokenizer: tok-hs,   cache_min: 4096, max_output: 64000 }
+  sonnet: { id: claude-sonnet-4-6,         tokenizer: tok-hs,   cache_min: 1024, max_output: 128000 }
+  opus:   { id: claude-opus-4-8,           tokenizer: tok-opus, cache_min: 1024, max_output: 128000 }
+
+tasks:
+  # --- placebo (its 1c treatment: 2-arm, no neutral, no label; already ~0% CoV) -----------------
+  - { id: 4,  name: classify_triage,   cost_axis: input,  bands: [S],
+      factorial_models: [haiku, sonnet, opus], skill: classify-triage-scaffold-v1 }
+
+  # --- CAP side (scaffold demand clearly below the measured natural range) ----------------------
+  - { id: 6,  name: short_form_copy,   cost_axis: output, bands: [S], h7_label: cap,
+      factorial_models: [haiku, sonnet, opus],
+      skill: short-form-copy-scaffold-v1,  neutral: short-form-copy-neutral-v2 }
+  - { id: 1,  name: email_reply,       cost_axis: output, bands: [S], h7_label: cap,
+      factorial_models: [haiku, sonnet, opus],
+      skill: email-reply-scaffold-v1,      neutral: email-reply-neutral-v1 }
+  - { id: 7,  name: minutes_recap,     cost_axis: output, bands: [S], h7_label: cap,
+      factorial_models: [haiku, sonnet, opus],
+      skill: minutes-recap-scaffold-v1,    neutral: minutes-recap-neutral-v1 }
+  - { id: 8,  name: extract_fields,    cost_axis: output, bands: [S], h7_label: cap,
+      factorial_models: [haiku, sonnet, opus],
+      skill: extract-fields-scaffold-v1,   neutral: extract-fields-neutral-v1 }
+
+  # --- MANDATE side (scaffold demand clearly above the measured natural range) ------------------
+  - { id: 9,  name: long_form_draft,   cost_axis: output, bands: [S], h7_label: mandate,
+      factorial_models: [haiku, sonnet, opus],
+      skill: long-form-draft-scaffold-v1,  neutral: long-form-draft-neutral-v2 }
+  - { id: 15, name: strategy_brief_1d, cost_axis: output, bands: [S], h7_label: mandate,
+      factorial_models: [haiku, sonnet, opus], thinking: adaptive,
+      skill: strategy-brief-1d-scaffold-v1, neutral: strategy-brief-1d-neutral-v1 }
+  - { id: 23, name: spec_draft,        cost_axis: output, bands: [S], h7_label: mandate,
+      factorial_models: [haiku, sonnet, opus],
+      skill: spec-draft-scaffold-v1,       neutral: spec-draft-neutral-v1 }
+  - { id: 24, name: status_report,     cost_axis: output, bands: [S], h7_label: mandate,
+      factorial_models: [haiku, sonnet, opus],
+      skill: status-report-scaffold-v1,    neutral: status-report-neutral-v1 }

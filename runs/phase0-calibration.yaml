@@ -1,0 +1,36 @@
+# runs/phase0-calibration.yaml — Cost calibration gate (precedes the full Phase 1a run)
+# Purpose: price the REAL cost — especially the expensive tail and the Opus delta — before
+# committing to running Opus universally. Owner ruling (2026-06-16).
+
+meta:
+  phase: "0-calibration"
+  derived_from: docs/SPEC.md   # §4
+  n_per_cell: 5                # cost-only; 3–5 is enough for a per-call cost mean + a smell-test
+  purpose: cost_projection_and_gate
+  cost_ceiling_usd: 500        # owner-set 2026-06-16
+  verified_live: 2026-06-16    # docs/live-verification-2026-06-16.md
+
+hygiene:
+  cost_only: true              # these calls do NOT enter the H1 variance dataset
+  real_run_uses_fresh_flat_n: true
+
+# Deliberately brackets the cost regimes so the projection covers the tail, not just the floor.
+# Each cell runs at its hypothesis tier AND on Opus (matched config per SPEC D2).
+cells:
+  - { task: 1,  band: S,    models: [haiku, opus],   regime: cheap_floor }
+  - { task: 7,  band: M,    models: [sonnet, opus],  regime: input_mid }
+  - { task: 7,  band: L,    models: [sonnet, opus],  regime: input_tail }          # ~100k input on Opus = priciest input cell
+  - { task: 10, band: M,    models: [sonnet, opus],  regime: cache_warm_read,
+      cache: { mode: warm_once_read_many, assert_hit: true } }
+  - { task: 15, band: high, models: [opus, sonnet],  regime: thinking_tail,
+      thinking: adaptive, temperature: omit }   # verified 2026-06-16: never send temperature; record 'omitted'
+
+projection:
+  formula: "sum_over_full_matrix( per_call_cost(cell) * cells * n_per_cell )"
+  break_out: opus_contribution    # report the Opus share separately
+
+# Pre-stated so the go/no-go isn't improvised after seeing numbers.
+decision_rule:
+  if_full_projection_within_ceiling: run_phase1a_as_specified
+  if_opus_portion_breaches_ceiling: opus_only_on_full_ladder_reps_plus_sample   # reps = tasks 1 and 7
+  basis: cost_not_variance

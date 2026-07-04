@@ -1,0 +1,67 @@
+# runs/phase1d-pilot.yaml — Phase-1d SKILL-OFF DESIGN PILOT (NOT the experiment).
+#
+# Purpose (design spine S3, docs/phase1d-build-notes.md): measure each NEW task's NATURAL loose
+# output — in WORDS, from response_text, tokenizer-independent — per model, BEFORE the scaffolds and
+# cap/mandate labels freeze. The locked classification rule compares each scaffold's demand to this
+# measured natural range: CAP if clearly below on all three models, MANDATE if clearly above;
+# boundary tasks are flagged/excluded (charter §3 H7). Post-pilot, scaffolds get explicit NUMERIC
+# demand cues set clearly outside the measured range, then labels freeze in runs/phase1d.yaml.
+#
+# HYGIENE (the runs/phase0-calibration.yaml precedent): these records are a DESIGN input ONLY. They
+# are never mixed into H1/H5/H7/H8 analysis (that is the frozen runs/phase1d.yaml at N=20), and the
+# pilot's N is a design-pilot choice, not the pre-committed experiment N — invariant 4 governs the
+# experiment, not this calibration artifact. Cells expand with role_label "factorial" (arms: [off]),
+# which is what persists response_text — the whole point (words are counted from it).
+#
+# BILLABLE — flag the owner with a cost estimate before running (fill recorded_token_counts in
+# fixtures/manifest-phase1d.yaml via the free count_tokens endpoint at the same gate). Run:
+#   uv run python -m harness.run --matrix runs/phase1d-pilot.yaml \
+#       --manifest fixtures/manifest-phase1d.yaml --usd-prior 25 --out results/
+# (No skill/neutral manifests: every task runs arms [off] — skill-less by design, harness-supported.)
+
+meta:
+  phase: "1d-pilot"
+  derived_from: docs/SPEC.md
+  n_per_cell: 10                         # design-pilot N (~5-10 per the locked spine; 10 chosen so a
+                                         # natural RANGE per model is visible, not just a point)
+  universal_opus_status: included        # Opus is a factorial arm in 1d, not an over-service add-on
+  gate: runs/phase0-calibration.yaml
+  cost_ceiling_usd: 10                   # hard safety cap (abort on breach); the pre-run estimate at
+                                         # the billable gate must come in well under this
+  verified_live: 2026-06-16              # docs/live-verification-2026-06-16.md (re-verify on model release)
+  rate_tier: { itpm: 450000, otpm: 90000, rpm: 1000, as_of: 2026-06-22 }
+
+defaults:
+  max_tokens: model_ceiling              # set to model max output; never omit. STREAM every call.
+  temperature: omit                      # never send it (constitution; verified 2026-06-16)
+  effort: high                           # Sonnet/Opus; Haiku has no effort knob
+
+over_service:
+  rule: not_applicable_factorial
+  optional_as_used: false
+
+# VERIFIED LIVE 2026-06-16. tokenizer: tok-hs = Haiku+Sonnet (shared); tok-opus differs ~+35%.
+models:
+  haiku:  { id: claude-haiku-4-5-20251001, tokenizer: tok-hs,   cache_min: 4096, max_output: 64000 }
+  sonnet: { id: claude-sonnet-4-6,         tokenizer: tok-hs,   cache_min: 1024, max_output: 128000 }
+  opus:   { id: claude-opus-4-8,           tokenizer: tok-opus, cache_min: 1024, max_output: 128000 }
+
+# The 6 NEW tasks only (#6/#9 natural ranges are already measured from the 1c run: #6 139-212w,
+# #9 255-696w; #4 placebo needs no pilot). arms: [off] = loose arm only, no skill required —
+# h7_label is intentionally ABSENT here (labels freeze in runs/phase1d.yaml AFTER this pilot).
+# #15 runs thinking-on at the model-natural convention (adaptive on Sonnet/Opus, off on Haiku —
+# Haiku supports neither the effort knob nor adaptive thinking, live-verification 2026-06-16), the
+# SAME config it will run in the real matrix — natural range must be measured under run conditions.
+tasks:
+  - { id: 1,  name: email_reply,       cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off] }
+  - { id: 7,  name: minutes_recap,     cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off] }
+  - { id: 8,  name: extract_fields,    cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off] }
+  - { id: 15, name: strategy_brief_1d, cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off], thinking: adaptive }
+  - { id: 23, name: spec_draft,        cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off] }
+  - { id: 24, name: status_report,     cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], arms: [off] }

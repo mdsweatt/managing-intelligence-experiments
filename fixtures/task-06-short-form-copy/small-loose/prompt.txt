@@ -1,0 +1,1 @@
+Write a LinkedIn post announcing the product described below, for a B2B audience. Output only the post.

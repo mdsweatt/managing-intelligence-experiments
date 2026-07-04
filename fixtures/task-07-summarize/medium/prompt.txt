@@ -1,0 +1,1 @@
+Summarize the following document in exactly 10 bullet points. Output only the bullet points, one per line, each line beginning with "- ". Do not include a title, preamble, or closing remarks.

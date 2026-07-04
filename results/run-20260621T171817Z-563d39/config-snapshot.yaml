@@ -1,0 +1,176 @@
+run_id: run-20260621T171817Z-563d39
+created_utc: '2026-06-21T17:18:17.816950+00:00'
+harness_version: 0.5.0
+sdk_version: 0.109.2
+matrix_path: runs/phase0.yaml
+manifest_path: fixtures/manifest.yaml
+n_per_cell: 5
+guard:
+  calls: 0
+  input_tokens: 0
+  output_tokens: 0
+  max_calls: 53
+  max_input_tokens: 3333333
+  max_output_tokens: 3333333
+units:
+- cell_key: t1:S:haiku:hypothesis
+  task_id: 1
+  band: S
+  model_role: haiku
+  role_label: hypothesis
+  family: standard
+  config:
+    model_role: haiku
+    model_id: claude-haiku-4-5-20251001
+    band: S
+    effort: null
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 64000
+  fixture_sha256: e763985408989be41a8956d517499cc4478ea0c3ecbf5d97325435b1eade80f8
+  n: 5
+- cell_key: t1:S:opus:over_service
+  task_id: 1
+  band: S
+  model_role: opus
+  role_label: over_service
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: S
+    effort: low
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: e763985408989be41a8956d517499cc4478ea0c3ecbf5d97325435b1eade80f8
+  n: 5
+- cell_key: t7:M:sonnet:hypothesis
+  task_id: 7
+  band: M
+  model_role: sonnet
+  role_label: hypothesis
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: M
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: ef398acc92dcd29f92fc4aa9987727d394f2112421b6fdc3ab335f47a4e0093c
+  n: 5
+- cell_key: t7:M:opus:over_service
+  task_id: 7
+  band: M
+  model_role: opus
+  role_label: over_service
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: M
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: ef398acc92dcd29f92fc4aa9987727d394f2112421b6fdc3ab335f47a4e0093c
+  n: 5
+- cell_key: t7:L:sonnet:hypothesis
+  task_id: 7
+  band: L
+  model_role: sonnet
+  role_label: hypothesis
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: L
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: 79297e2d71abc064c9eab88a2d6c6a765f20305cd24e17878f97281a75d35e16
+  n: 5
+- cell_key: t7:L:opus:over_service
+  task_id: 7
+  band: L
+  model_role: opus
+  role_label: over_service
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: L
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: 79297e2d71abc064c9eab88a2d6c6a765f20305cd24e17878f97281a75d35e16
+  n: 5
+- cell_key: t10:M:sonnet:hypothesis
+  task_id: 10
+  band: M
+  model_role: sonnet
+  role_label: hypothesis
+  family: cache
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: M
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: 9a0bd8d8098dd4648fb17f76526f52f3f668434abe177a59b4635e063b0370d7
+  n: 5
+- cell_key: t10:M:opus:over_service
+  task_id: 10
+  band: M
+  model_role: opus
+  role_label: over_service
+  family: cache
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: M
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: 9a0bd8d8098dd4648fb17f76526f52f3f668434abe177a59b4635e063b0370d7
+  n: 5
+- cell_key: t15:high:opus:hypothesis
+  task_id: 15
+  band: high
+  model_role: opus
+  role_label: hypothesis
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: high
+    effort: high
+    thinking: adaptive
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: ebfd86309115b7098e3e52215f1bcb65425d5b62d2808bbb9ba69f7016199a89
+  n: 5
+- cell_key: t15:high:sonnet:down_probe
+  task_id: 15
+  band: high
+  model_role: sonnet
+  role_label: down_probe
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: high
+    effort: high
+    thinking: adaptive
+    temperature: omitted
+    max_tokens: 128000
+  fixture_sha256: ebfd86309115b7098e3e52215f1bcb65425d5b62d2808bbb9ba69f7016199a89
+  n: 5
+skipped_bands: []

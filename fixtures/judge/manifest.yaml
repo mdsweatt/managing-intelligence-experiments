@@ -1,0 +1,65 @@
+# fixtures/judge/manifest.yaml — Experiment 1c frozen quality-judge instrument
+# (peer of fixtures/skills/manifest.yaml and fixtures/manifest-phase1c.yaml).
+#
+# The judge is a frozen, pre-registered instrument exactly like a fixture or a skill
+# (CLAUDE.md "Skills + judge are frozen, hashed, pre-registered artifacts"; judge-spec §2):
+# its model + K + margin + the two prompt templates + the per-task rubric text are pinned and
+# hashed BEFORE any grading data exists, and the composite `judge_hash` is stamped on every
+# judging-output record so the grading replays. `file` paths are relative to fixtures_root.
+#
+# STATUS: FROZEN 2026-06-28 — prompts owner-reviewed; Opus 4.8 judge-call surface verified live
+# (docs/live-verification-judge-2026-06-28.md: temperature rejected, thinking off, json_schema
+# accepted); judge_hash computed over the components below and pinned here + in
+# docs/phase1c-judge-spec.md §2. To revise a frozen judge, cut a new instrument — never edit bytes
+# under a frozen judge_hash.
+schema_version: 1
+status: FROZEN
+
+judge_model: claude-opus-4-8   # strongest tier, to avoid a weak judge (judge-spec §2)
+k: 3                           # replicate judgments per item; majority vote; <2/3 agreement => low_confidence
+margin_pp: 10                  # H6 tier-equivalence: |wins_haiku - wins_opus| / pairs <= 0.10 (ties excluded)
+
+prompts:
+  rubric:
+    file: judge/rubric-judge-prompt.md
+    sha256: cc1d6ec4c1e41eff1c763524d331d60b0b9223e54786029938971174489add68
+  pairwise:
+    file: judge/pairwise-judge-prompt.md
+    sha256: cdedfcee620777bc80bdb36b5d0848a6c0fbc2cbbec2abb5032d2801cdf65e94
+
+# Per-task graders. The SEMANTIC checks below are LLM-judged via the rubric prompt; the OBJECTIVE
+# checks (#6/#9 word counts, #6 hashtag count, #9 section presence, #4 exact-match) are graded in
+# code (analysis/quality.py), never by the LLM, to keep judge noise out of the objective parts
+# (judge-spec §1(a) parenthetical). `pairwise: true` marks the tasks that get the blind H6 pairwise.
+rubrics:
+  "4":
+    grader: exact_match          # deterministic; no LLM judge, no pairwise (placebo control)
+    gold: P1_Critical            # owner-pinned gold label (judge-spec §1, 2026-06-27)
+    pairwise: false
+  "6":
+    pairwise: true
+    checks:
+      - id: cta_valid
+        type: binary
+        text: "Exactly one call to action, and it invites the reader to book or request a demo."
+      - id: hook_quality
+        type: graded
+        scores: [0, 1, 2]
+        text: "The post opens with a distinct one-line hook (not body text). Score 0-2: 0 = generic or absent, 1 = present but weak, 2 = sharp and specific."
+      - id: faithful
+        type: binary
+        text: "Every product claim in the post is supported by the source blurb; nothing is invented."
+  "9":
+    pairwise: true
+    checks:
+      - id: recommendation_upfront
+        type: binary
+        text: "A single explicit recommendation (renew the current vendor OR pilot a replacement) is stated up front, in the first line."
+      - id: faithful
+        type: binary
+        text: "No invented vendor names or dollar figures beyond the brief; every specific traces to the brief."
+
+# judge_hash = harness.hashing.judge_hash({judge_model, k, margin_pp, prompt_rubric (text),
+# prompt_pairwise (text), rubrics}). Computed and pinned at freeze (Gate 1.3); replayed/verified
+# by analysis/quality.py on every run.
+judge_hash: d12c36a2c8e77a31d712ff6d7913e58f049177a1587412e01fe9800367a4616c

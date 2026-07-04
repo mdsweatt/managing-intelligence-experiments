@@ -1,0 +1,1 @@
+We tried to optimize a large plan in Cartographa and it failed with error CART-504. What does that error mean, and what should we do to get the plan to optimize successfully? Answer using only the knowledge base provided. Be concise. Output only the answer.

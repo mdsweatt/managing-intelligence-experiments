@@ -1,0 +1,437 @@
+{
+  "tokenizer": {
+    "counts": {
+      "haiku": 66,
+      "sonnet": 66,
+      "opus": 89
+    },
+    "shared": false
+  },
+  "models": {
+    "haiku": {
+      "id": "claude-haiku-4-5-20251001",
+      "display_name": "Claude Haiku 4.5",
+      "max_input_tokens": 200000,
+      "max_tokens": 64000,
+      "capabilities": {
+        "batch": {
+          "supported": true
+        },
+        "citations": {
+          "supported": true
+        },
+        "code_execution": {
+          "supported": false
+        },
+        "context_management": {
+          "clear_thinking_20251015": {
+            "supported": true
+          },
+          "clear_tool_uses_20250919": {
+            "supported": true
+          },
+          "compact_20260112": {
+            "supported": false
+          },
+          "supported": true
+        },
+        "effort": {
+          "high": {
+            "supported": false
+          },
+          "low": {
+            "supported": false
+          },
+          "max": {
+            "supported": false
+          },
+          "medium": {
+            "supported": false
+          },
+          "supported": false,
+          "xhigh": {
+            "supported": false
+          }
+        },
+        "image_input": {
+          "supported": true
+        },
+        "pdf_input": {
+          "supported": true
+        },
+        "structured_outputs": {
+          "supported": true
+        },
+        "thinking": {
+          "supported": true,
+          "types": {
+            "adaptive": {
+              "supported": false
+            },
+            "enabled": {
+              "supported": true
+            }
+          }
+        }
+      },
+      "raw_keys": [
+        "capabilities",
+        "created_at",
+        "display_name",
+        "id",
+        "max_input_tokens",
+        "max_tokens",
+        "type"
+      ]
+    },
+    "sonnet": {
+      "id": "claude-sonnet-4-6",
+      "display_name": "Claude Sonnet 4.6",
+      "max_input_tokens": 1000000,
+      "max_tokens": 128000,
+      "capabilities": {
+        "batch": {
+          "supported": true
+        },
+        "citations": {
+          "supported": true
+        },
+        "code_execution": {
+          "supported": true
+        },
+        "context_management": {
+          "clear_thinking_20251015": {
+            "supported": true
+          },
+          "clear_tool_uses_20250919": {
+            "supported": true
+          },
+          "compact_20260112": {
+            "supported": true
+          },
+          "supported": true
+        },
+        "effort": {
+          "high": {
+            "supported": true
+          },
+          "low": {
+            "supported": true
+          },
+          "max": {
+            "supported": true
+          },
+          "medium": {
+            "supported": true
+          },
+          "supported": true,
+          "xhigh": {
+            "supported": false
+          }
+        },
+        "image_input": {
+          "supported": true
+        },
+        "pdf_input": {
+          "supported": true
+        },
+        "structured_outputs": {
+          "supported": true
+        },
+        "thinking": {
+          "supported": true,
+          "types": {
+            "adaptive": {
+              "supported": true
+            },
+            "enabled": {
+              "supported": true
+            }
+          }
+        }
+      },
+      "raw_keys": [
+        "capabilities",
+        "created_at",
+        "display_name",
+        "id",
+        "max_input_tokens",
+        "max_tokens",
+        "type"
+      ]
+    },
+    "opus": {
+      "id": "claude-opus-4-8",
+      "display_name": "Claude Opus 4.8",
+      "max_input_tokens": 1000000,
+      "max_tokens": 128000,
+      "capabilities": {
+        "batch": {
+          "supported": true
+        },
+        "citations": {
+          "supported": true
+        },
+        "code_execution": {
+          "supported": true
+        },
+        "context_management": {
+          "clear_thinking_20251015": {
+            "supported": true
+          },
+          "clear_tool_uses_20250919": {
+            "supported": true
+          },
+          "compact_20260112": {
+            "supported": true
+          },
+          "supported": true
+        },
+        "effort": {
+          "high": {
+            "supported": true
+          },
+          "low": {
+            "supported": true
+          },
+          "max": {
+            "supported": true
+          },
+          "medium": {
+            "supported": true
+          },
+          "supported": true,
+          "xhigh": {
+            "supported": true
+          }
+        },
+        "image_input": {
+          "supported": true
+        },
+        "pdf_input": {
+          "supported": true
+        },
+        "structured_outputs": {
+          "supported": true
+        },
+        "thinking": {
+          "supported": true,
+          "types": {
+            "adaptive": {
+              "supported": true
+            },
+            "enabled": {
+              "supported": false
+            }
+          }
+        }
+      },
+      "raw_keys": [
+        "capabilities",
+        "created_at",
+        "display_name",
+        "id",
+        "max_input_tokens",
+        "max_tokens",
+        "type"
+      ]
+    }
+  },
+  "cache": {
+    "haiku": [
+      {
+        "target": 1500,
+        "approx_prefix_tokens": 1388,
+        "cache_creation": 0,
+        "cache_read": 0,
+        "input": 1388,
+        "cached": false
+      },
+      {
+        "target": 3000,
+        "approx_prefix_tokens": 2745,
+        "cache_creation": 0,
+        "cache_read": 0,
+        "input": 2745,
+        "cached": false
+      },
+      {
+        "target": 5000,
+        "approx_prefix_tokens": 4513,
+        "cache_creation": 4504,
+        "cache_read": 0,
+        "input": 9,
+        "cached": true
+      }
+    ],
+    "sonnet": [
+      {
+        "target": 1500,
+        "approx_prefix_tokens": 1391,
+        "cache_creation": 1382,
+        "cache_read": 0,
+        "input": 9,
+        "cached": true
+      },
+      {
+        "target": 3000,
+        "approx_prefix_tokens": 2747,
+        "cache_creation": 2738,
+        "cache_read": 0,
+        "input": 9,
+        "cached": true
+      },
+      {
+        "target": 5000,
+        "approx_prefix_tokens": 4519,
+        "cache_creation": 4510,
+        "cache_read": 0,
+        "input": 9,
+        "cached": true
+      }
+    ],
+    "opus": [
+      {
+        "target": 1500,
+        "approx_prefix_tokens": 1447,
+        "cache_creation": 1437,
+        "cache_read": 0,
+        "input": 10,
+        "cached": true
+      },
+      {
+        "target": 3000,
+        "approx_prefix_tokens": 2854,
+        "cache_creation": 2844,
+        "cache_read": 0,
+        "input": 10,
+        "cached": true
+      },
+      {
+        "target": 5000,
+        "approx_prefix_tokens": 4768,
+        "cache_creation": 4758,
+        "cache_read": 0,
+        "input": 10,
+        "cached": true
+      }
+    ]
+  },
+  "temperature": {
+    "haiku": {
+      "temp_no_thinking": {
+        "ok": true,
+        "stop_reason": "end_turn"
+      }
+    },
+    "sonnet": {
+      "temp_no_thinking": {
+        "ok": true,
+        "stop_reason": "end_turn"
+      },
+      "temp_with_thinking": {
+        "ok": false,
+        "status": 400,
+        "type": "invalid_request_error",
+        "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': '`temperature` may only be set to 1 when thinking is enabled or in adaptive mode. Please consult our documentation at https://docs.claude.com/en/docs/build-with-claude/extended-thinking#important-considerations"
+      }
+    },
+    "opus": {
+      "temp_no_thinking": {
+        "ok": false,
+        "status": 400,
+        "type": "invalid_request_error",
+        "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': '`temperature` is deprecated for this model.'}, 'request_id': 'req_REDACTED'}"
+      },
+      "temp_with_thinking": {
+        "ok": false,
+        "status": 400,
+        "type": "invalid_request_error",
+        "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': '`temperature` may only be set to 1 when thinking is enabled or in adaptive mode. Please consult our documentation at https://docs.claude.com/en/docs/build-with-claude/extended-thinking#important-considerations"
+      }
+    }
+  },
+  "thinking_usage": {
+    "ok": true,
+    "stop_reason": "end_turn",
+    "block_types": [
+      "thinking",
+      "text"
+    ],
+    "usage_keys": [
+      "cache_creation",
+      "cache_creation_input_tokens",
+      "cache_read_input_tokens",
+      "inference_geo",
+      "input_tokens",
+      "output_tokens",
+      "output_tokens_details",
+      "server_tool_use",
+      "service_tier"
+    ],
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 26,
+      "output_tokens": 59,
+      "output_tokens_details": {
+        "thinking_tokens": 11
+      },
+      "server_tool_use": null,
+      "service_tier": "standard"
+    }
+  },
+  "headers": {
+    "ok": true,
+    "request_id_attr": "req_REDACTED",
+    "relevant_headers": {
+      "anthropic-ratelimit-input-tokens-limit": "50000",
+      "anthropic-ratelimit-input-tokens-remaining": "50000",
+      "anthropic-ratelimit-input-tokens-reset": "2026-06-17T03:27:02Z",
+      "anthropic-ratelimit-output-tokens-limit": "10000",
+      "anthropic-ratelimit-output-tokens-remaining": "10000",
+      "anthropic-ratelimit-output-tokens-reset": "2026-06-17T03:27:03Z",
+      "anthropic-ratelimit-requests-limit": "50",
+      "anthropic-ratelimit-requests-remaining": "49",
+      "anthropic-ratelimit-requests-reset": "2026-06-17T03:27:03Z",
+      "anthropic-ratelimit-tokens-limit": "60000",
+      "anthropic-ratelimit-tokens-remaining": "60000",
+      "anthropic-ratelimit-tokens-reset": "2026-06-17T03:27:02Z",
+      "request-id": "req_REDACTED"
+    },
+    "all_header_keys": [
+      "anthropic-organization-id",
+      "anthropic-ratelimit-input-tokens-limit",
+      "anthropic-ratelimit-input-tokens-remaining",
+      "anthropic-ratelimit-input-tokens-reset",
+      "anthropic-ratelimit-output-tokens-limit",
+      "anthropic-ratelimit-output-tokens-remaining",
+      "anthropic-ratelimit-output-tokens-reset",
+      "anthropic-ratelimit-requests-limit",
+      "anthropic-ratelimit-requests-remaining",
+      "anthropic-ratelimit-requests-reset",
+      "anthropic-ratelimit-tokens-limit",
+      "anthropic-ratelimit-tokens-remaining",
+      "anthropic-ratelimit-tokens-reset",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-security-policy",
+      "content-type",
+      "date",
+      "request-id",
+      "server",
+      "strict-transport-security",
+      "traceresponse",
+      "transfer-encoding",
+      "vary",
+      "x-robots-tag"
+    ]
+  }
+}

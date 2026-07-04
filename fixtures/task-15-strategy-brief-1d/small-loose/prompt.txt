@@ -1,0 +1,1 @@
+Write a strategy brief that answers the question in the context below. Output only the brief.

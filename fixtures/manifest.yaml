@@ -1,0 +1,292 @@
+# fixtures/manifest.yaml — registry of frozen fixtures
+#
+# CONTRACT: a fixture is IMMUTABLE once listed and hashed. Its sha256 pins the exact
+# (prompt, input) PAIR a record was produced from. New regime -> NEW fixture entry,
+# never edit an existing one in place. (CLAUDE.md invariants 5 & 6.)
+#
+# Select content by a MODEL-INDEPENDENT proxy (words / pages / lines / files / turns); record
+# the resulting token count as a consequence. Verified 2026-06-16: the tokenizer is NOT shared —
+# Haiku 4.5 & Sonnet 4.6 share one (tok-hs); Opus 4.8 differs ~+35% (tok-opus). So record TWO
+# counts per fixture: recorded_token_counts.{tok_hs, tok_opus}. (CLAUDE.md invariant 6, Rule 2 active.)
+
+schema_version: 2   # v2 (2026-06-16): recorded_token_counts (two) replaces single recorded_token_count
+
+# Per-fixture fields:
+#   task_id, band            -> the cell this fixture serves
+#   cost_axis                -> dominant axis (load-band §4): input|output|turns|payload|cached_context|thinking_depth
+#   proxy: {type, value}     -> the model-independent selector actually used
+#   files: {prompt, input}   -> paths under fixtures/<task-dir>/<band>/ ; 'input' omitted for fixed-small / output / thinking tasks
+#   recorded_token_counts    -> { tok_hs: <Haiku/Sonnet count>, tok_opus: <Opus count> } (tokenizer NOT shared)
+#   sha256                   -> sha256( canonical_json({"input": <input or null>, "prompt": <prompt>}) ):
+#                               utf-8, sorted keys, compact separators, ensure_ascii=False; input is
+#                               null (not "") when there is no input file. Domain-separated, NOT a
+#                               literal prompt+input concatenation (which collides). Reproduce with
+#                               harness.config.fixture_hash / fixture_hash_from_files. 'TBD' until frozen.
+#   frozen                   -> false until curated + hashed, then true (and never edited). Enforced:
+#                               frozen=true REQUIRES a 64-char hex sha256 (harness rejects frozen+'TBD').
+
+fixtures:
+  # === Phase 1a single-call cells — FROZEN 2026-06-21 (counts measured + re-verified against
+  # count_tokens, sha256 pinned; record in docs/fixture-freeze-2026-06-21.md). #9 bands on OUTPUT
+  # (proxy=target output words); #15 'shared' artifact serves effort bands low/high/max.
+  - task_id: 1
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 43 }
+    files: { prompt: task-01-draft-email/small/prompt.txt, input: task-01-draft-email/small/input.md }
+    recorded_token_counts: { tok_hs: 138, tok_opus: 198 }
+    sha256: e763985408989be41a8956d517499cc4478ea0c3ecbf5d97325435b1eade80f8
+    frozen: true
+
+  - task_id: 2
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 122 }
+    files: { prompt: task-02-rewrite-retone/small/prompt.txt, input: task-02-rewrite-retone/small/input.md }
+    recorded_token_counts: { tok_hs: 225, tok_opus: 301 }
+    sha256: 6de33e18c75f0267d63edc92fee4e687ff90a13e0257b2d2f3ccaa99d4e3f150
+    frozen: true
+
+  # #2-M frozen as-is (owner 2026-06-21): 1496 tok-hs sits in the S regime, not the ~10K M anchor —
+  # the word-proxy still separates it from #2-S (122 vs 1181 w); caveat in docs/fixture-freeze-2026-06-21.md.
+  - task_id: 2
+    band: M
+    cost_axis: input
+    proxy: { type: words, value: 1181 }
+    files: { prompt: task-02-rewrite-retone/medium/prompt.txt, input: task-02-rewrite-retone/medium/input.md }
+    recorded_token_counts: { tok_hs: 1496, tok_opus: 2074 }
+    sha256: 8053bc715bb385860400a5d477239d62bcaf5f9c4e7d3f15faa725a3586369a5
+    frozen: true
+
+  - task_id: 3
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 38 }
+    files: { prompt: task-03-factual-q/small/prompt.txt }
+    recorded_token_counts: { tok_hs: 48, tok_opus: 66 }
+    sha256: 7a92fa70cc30f21652759979134c51091a6481b0600403cf0862aa5e2e59574c
+    frozen: true
+
+  - task_id: 4
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 62 }
+    files: { prompt: task-04-classify-triage/small/prompt.txt }
+    recorded_token_counts: { tok_hs: 273, tok_opus: 386 }
+    sha256: 38c328e4ef3eee33968bef8d52369a77d433b9978c670d78de79914059c0a302
+    frozen: true
+
+  - task_id: 5
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 103 }
+    files: { prompt: task-05-translate/small/prompt.txt, input: task-05-translate/small/input.md }
+    recorded_token_counts: { tok_hs: 143, tok_opus: 212 }
+    sha256: 2d1b6f373782a28106061a6fedc1fd177aeb707b396840ba253878bdd02eb1a2
+    frozen: true
+
+  # #5-M FROZEN 2026-06-21: source replaced (owner) with the *Europe 2031* scenario (europe2031.ai,
+  # retrieved 2026-06-21) — title + narrative prose up to (not incl.) "January 2028 - Taking stock",
+  # markdown cleaned to plain prose; 6911 words -> 9367 tok-hs (M regime, was 1022/S). Third-party
+  # fiction (Daan Juijn et al., ARQ Foundation). See docs/fixture-freeze-2026-06-21.md.
+  - task_id: 5
+    band: M
+    cost_axis: input
+    proxy: { type: words, value: 6911 }
+    files: { prompt: task-05-translate/medium/prompt.txt, input: task-05-translate/medium/input.md }
+    recorded_token_counts: { tok_hs: 9367, tok_opus: 13666 }
+    sha256: 37cbd065f2c64db7801b62501b5d6bb48926fa56860b1e833d9b04ae8b23331c
+    frozen: true
+
+  - task_id: 6
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 98 }
+    files: { prompt: task-06-short-form-copy/small/prompt.txt, input: task-06-short-form-copy/small/input.md }
+    recorded_token_counts: { tok_hs: 155, tok_opus: 227 }
+    sha256: 9c80c0647e86665e0788786ecbff9d51e0f2a8ebfb1b985fdbb7e20f90f7fc01
+    frozen: true
+
+  - task_id: 7
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 755 }
+    files: { prompt: task-07-summarize/small/prompt.txt, input: task-07-summarize/small/input.md }
+    recorded_token_counts: { tok_hs: 1032, tok_opus: 1521 }
+    sha256: e601a92e71252cd4c4d95fd1d1366ac4da3a310badafeb244d473ae8eabb0b15
+    frozen: true
+
+  - task_id: 7
+    band: M
+    cost_axis: input
+    proxy: { type: words, value: 6928 }
+    files: { prompt: task-07-summarize/medium/prompt.txt, input: task-07-summarize/medium/input.md }
+    recorded_token_counts: { tok_hs: 8880, tok_opus: 13186 }
+    sha256: ef398acc92dcd29f92fc4aa9987727d394f2112421b6fdc3ab335f47a4e0093c
+    frozen: true
+
+  - task_id: 8
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 660 }
+    files: { prompt: task-08-extract-structured/small/prompt.txt, input: task-08-extract-structured/small/input.md }
+    recorded_token_counts: { tok_hs: 1594, tok_opus: 2228 }
+    sha256: 272bab6b7587c57d14aee93fa05158ed0d828eeacebba09245580f9d9fa09f62
+    frozen: true
+
+  - task_id: 8
+    band: M
+    cost_axis: input
+    proxy: { type: words, value: 6491 }
+    files: { prompt: task-08-extract-structured/medium/prompt.txt, input: task-08-extract-structured/medium/input.md }
+    recorded_token_counts: { tok_hs: 10160, tok_opus: 15006 }
+    sha256: af6f6bc941aa2924016f1d5c48958d058391c1551dc9b19909c8e17832cdf54a
+    frozen: true
+
+  - task_id: 9
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 800 }
+    files: { prompt: task-09-long-form-draft/small/prompt.txt, input: task-09-long-form-draft/small/input.md }
+    recorded_token_counts: { tok_hs: 343, tok_opus: 542 }
+    sha256: 3e1ecce2f3acef7d6892e439ff47d1ae26671ffaa0d702c6816bbce118aece26
+    frozen: true
+
+  - task_id: 9
+    band: M
+    cost_axis: output
+    proxy: { type: words, value: 2500 }
+    files: { prompt: task-09-long-form-draft/medium/prompt.txt, input: task-09-long-form-draft/medium/input.md }
+    recorded_token_counts: { tok_hs: 431, tok_opus: 631 }
+    sha256: 4c7683db538a51cb0e04a74e04fd5ff9888a16429a2057efa2d786c65961a432
+    frozen: true
+
+  - task_id: 15
+    band: shared
+    cost_axis: thinking_depth
+    proxy: { type: words, value: 433 }
+    files: { prompt: task-15-strategy-brief/shared/prompt.txt, input: task-15-strategy-brief/shared/input.md }
+    recorded_token_counts: { tok_hs: 769, tok_opus: 1096 }
+    sha256: ebfd86309115b7098e3e52215f1bcb65425d5b62d2808bbb9ba69f7016199a89
+    frozen: true
+
+  # === #22 image_prompt_gen — FROZEN 2026-06-21 (synthetic, demand-driven addition per charter §5).
+  # Output axis (proxy = target output words: two image-prompts, <80 words each). Counts measured
+  # (tok_hs 441 / tok_opus 632) + sha256 pinned; record in docs/fixture-freeze-2026-06-21.md.
+  - task_id: 22
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 160 }
+    files: { prompt: task-22-image-prompt-gen/small/prompt.txt, input: task-22-image-prompt-gen/small/input.md }
+    recorded_token_counts: { tok_hs: 441, tok_opus: 632 }
+    sha256: 8ec511010e0cf71b321a5a31e1bee6b11e2bb33b603f4457c25d9122d2f265fe
+    frozen: true
+
+  # === tranche 2 — FROZEN 2026-06-21 (synthetic): cache/payload M-band + turn cells. Counts measured
+  # + sha256 pinned; cache prefixes (#11/#12 input.md) clear the Haiku ≥4096 floor (8897 / 10686 tok-hs).
+  # Record in docs/fixture-freeze-2026-06-21.md. On-disk formats per fixtures/README.md (multi-turn
+  # ===TURN=== delimiter; payload via tool_result; cache input.md = cached prefix). L-band deferred
+  # (owner). proxy is the model-independent selector; for #11 code = lines, #18 CSV = rows.
+  - task_id: 10
+    band: M
+    cost_axis: cached_context
+    proxy: { type: words, value: 7189 }
+    files: { prompt: task-10-support-vs-kb/medium/prompt.txt, input: task-10-support-vs-kb/medium/input.md }
+    recorded_token_counts: { tok_hs: 10143, tok_opus: 14338 }
+    sha256: 9a0bd8d8098dd4648fb17f76526f52f3f668434abe177a59b4635e063b0370d7
+    frozen: true
+    cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 }
+
+  - task_id: 11
+    band: M
+    cost_axis: cached_context
+    proxy: { type: lines, value: 946 }
+    files: { prompt: task-11-code-edit-known/medium/prompt.txt, input: task-11-code-edit-known/medium/input.md }
+    recorded_token_counts: { tok_hs: 9019, tok_opus: 12068 }
+    sha256: 310071b76f2466010bc14be0224eee97f2ce2e8e1ec2ca8904adfdf1b727bdd9
+    frozen: true
+    cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 }
+
+  - task_id: 12
+    band: M
+    cost_axis: cached_context
+    proxy: { type: words, value: 7272 }
+    files: { prompt: task-12-qa-vs-reference/medium/prompt.txt, input: task-12-qa-vs-reference/medium/input.md }
+    recorded_token_counts: { tok_hs: 10734, tok_opus: 14722 }
+    sha256: a7843280d059626aeae4f3010a054419163069594f5225628d734391cd9b0bc6
+    frozen: true
+    cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 }
+
+  # multi-turn: prompt.txt = scripted USER turns split on ===TURN=== (fixtures/README.md §3);
+  # band = turn count; #16 carries shared context in input.md, #17 is prompt-only.
+  - task_id: 16
+    band: few
+    cost_axis: turns
+    proxy: { type: turns, value: 3 }
+    files: { prompt: task-16-debug-multiturn/few/prompt.txt, input: task-16-debug-multiturn/few/input.md }
+    recorded_token_counts: { tok_hs: 481, tok_opus: 620 }
+    sha256: a7e79182eab2e7609477f673021249d6731451aaba33067d6d171d31ade6e9b8
+    frozen: true
+
+  - task_id: 16
+    band: many
+    cost_axis: turns
+    proxy: { type: turns, value: 8 }
+    files: { prompt: task-16-debug-multiturn/many/prompt.txt, input: task-16-debug-multiturn/many/input.md }
+    recorded_token_counts: { tok_hs: 757, tok_opus: 995 }
+    sha256: 0ecd1ab194588c79d0cc5f27b0020119d794c0e1105db907eeb4ddb029617022
+    frozen: true
+
+  - task_id: 17
+    band: few
+    cost_axis: turns
+    proxy: { type: turns, value: 3 }
+    files: { prompt: task-17-iterative-refine/few/prompt.txt }
+    recorded_token_counts: { tok_hs: 172, tok_opus: 212 }
+    sha256: 56180d98f3e4a6875dd7b3f13237dc694d6092543c5492f7eab46482ed121526
+    frozen: true
+
+  - task_id: 17
+    band: many
+    cost_axis: turns
+    proxy: { type: turns, value: 8 }
+    files: { prompt: task-17-iterative-refine/many/prompt.txt }
+    recorded_token_counts: { tok_hs: 365, tok_opus: 482 }
+    sha256: 9e75cd4a4d05b6d0c5f3717f8cce9b7f6fa127d6931553d6b5713948eb736d0d
+    frozen: true
+
+  # payload: input.md = the payload artifact (delivered as a tool_result in Phase 5, README §4);
+  # #18 dataset proxy = rows, #19 batch proxy = # files.
+  - task_id: 18
+    band: M
+    cost_axis: payload
+    proxy: { type: lines, value: 430 }
+    files: { prompt: task-18-analyze-dataset/medium/prompt.txt, input: task-18-analyze-dataset/medium/input.md }
+    recorded_token_counts: { tok_hs: 19122, tok_opus: 24240 }
+    sha256: 71902efee71fbd60b2a8a2770e4d7fe5e2dfbdc78a37d51c5ce3cbaf622544d3
+    frozen: true
+
+  - task_id: 19
+    band: M
+    cost_axis: payload
+    proxy: { type: files, value: 9 }
+    files: { prompt: task-19-batch-files/medium/prompt.txt, input: task-19-batch-files/medium/input.md }
+    recorded_token_counts: { tok_hs: 9259, tok_opus: 12312 }
+    sha256: e97e060c4fcec1046530f31578eb7a8ced80415d26439de89d1d51a63b71e6f0
+    frozen: true
+
+  # === L-band — #7-L FROZEN (Phase-0 cost-gate exemplar); rest of L-band DEFERRED (owner) ===
+  - task_id: 7
+    band: L
+    cost_axis: input
+    proxy: { type: words, value: 25338 }
+    files: { prompt: task-07-summarize/large/prompt.txt, input: task-07-summarize/large/input.md }
+    recorded_token_counts: { tok_hs: 37858, tok_opus: 55427 }
+    sha256: 79297e2d71abc064c9eab88a2d6c6a765f20305cd24e17878f97281a75d35e16
+    frozen: true
+  # #7-L above is FROZEN and real (a 25,338-word doc; ~38k tok-hs / 55k tok-opus, L regime) — the
+  # input-tail cost exemplar in runs/phase0-calibration.yaml (cost-only; not in the H1 dataset).
+  # DEFERRED (owner): the REST of the L-band tranche — 8-L (~75k-word doc), cache 10/11/12-L,
+  # payload 18/19-L (each ~100k tokens; sourcing method TBD) — no fixtures yet, auto-skipped in
+  # expansion. The cache/payload M-band and the turn cells are frozen above (2026-06-21). Phase 1b
+  # agentic cells #13/14/20/21 are specified separately when 1a lands.

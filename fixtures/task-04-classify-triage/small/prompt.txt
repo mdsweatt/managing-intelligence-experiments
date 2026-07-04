@@ -1,0 +1,19 @@
+You are a support-desk triage classifier. Read the support ticket below and assign exactly ONE priority label from this fixed set:
+
+- P1_Critical
+- P2_High
+- P3_Normal
+- P4_Low
+
+Definitions:
+- P1_Critical: a broken function with an imminent hard deadline or full work stoppage and no workaround.
+- P2_High: a broken function blocking important work, but with a near-term (not same-day) deadline or a partial workaround.
+- P3_Normal: a routine problem, question, or request with no urgent deadline.
+- P4_Low: a cosmetic issue, minor inconvenience, or general feedback.
+
+Reply with only the label and nothing else. Do not add punctuation, explanation, or any other text.
+
+Ticket:
+Subject: Cannot export monthly invoices to CSV
+
+Hi, our finance team relies on the bulk CSV export under Billing to reconcile accounts at month-end, but since yesterday the Export button spins and never produces a file. We tried two browsers and cleared the cache. Closing is tomorrow and we are blocked. Please advise urgently whether this is a known outage. Thanks, Dana.

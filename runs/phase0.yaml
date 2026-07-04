@@ -1,0 +1,47 @@
+# runs/phase0.yaml — Phase 0 cost-calibration gate, MACHINE FORM (the harness consumes THIS).
+#
+# Executable matrix for the run loop:  python -m harness.run --matrix runs/phase0.yaml [--dry-run]
+# Human-readable spec: runs/phase0-calibration.yaml (SPEC.md §4) — keep the two in sync.
+#
+# Purpose: price the REAL cost (esp. the expensive tail + the Opus delta) on a small, cost-spanning
+# subset at N=5, cost-ONLY, BEFORE committing to universal Opus in Phase 1a. The subset brackets the
+# cost regimes:  #1-S cheap floor · #7-M/#7-L input gradient + tail · #10-M cache shape · #15-high
+# thinking tail.  Same schema / models / defaults / over_service as runs/phase1a.yaml.
+#
+# Cost-only: per SPEC §4 hygiene these calls do NOT enter the H1 variance dataset; the real Phase 1a
+# run uses a fresh, committed flat N=20.
+
+meta:
+  phase: "0-calibration"
+  derived_from: docs/SPEC.md          # §4
+  n_per_cell: 5                        # cost-only; 3–5 is enough for a per-call cost mean + smell test
+  universal_opus_status: deciding      # this run IS the gate that decides it (phase1a carries 'gated')
+  gate: none                           # Phase 0 is itself the gate — nothing upstream gates it
+  cost_ceiling_usd: 500                # owner-set 2026-06-16; harness aborts on breach
+  verified_live: 2026-06-16            # docs/live-verification-2026-06-16.md
+  rate_tier: { itpm: 450000, otpm: 90000, rpm: 1000, as_of: 2026-06-16 }
+
+defaults:
+  max_tokens: model_ceiling            # set to model max output; never omit. STREAM every call.
+  temperature: omit                    # never sent (Opus rejects it; Sonnet rejects w/ thinking on)
+  effort: high                         # non-#15 Sonnet/Opus cells; Haiku has no effort knob
+
+over_service:
+  rule: match_hypothesis_config_swap_model
+  optional_as_used: false
+
+# VERIFIED LIVE 2026-06-16. tok-hs = Haiku+Sonnet (shared); tok-opus differs ~+35%.
+models:
+  haiku:  { id: claude-haiku-4-5-20251001, tokenizer: tok-hs,   cache_min: 4096, max_output: 64000 }
+  sonnet: { id: claude-sonnet-4-6,         tokenizer: tok-hs,   cache_min: 1024, max_output: 128000 }
+  opus:   { id: claude-opus-4-8,           tokenizer: tok-opus, cache_min: 1024, max_output: 128000 }
+
+# The 5 cost-spanning cells (SPEC §4). Model sets fall out of hypothesis + over_service/down_probe:
+#   #1-S haiku+opus · #7-M & #7-L sonnet+opus · #10-M sonnet+opus (cache) · #15-high opus+sonnet
+tasks:
+  - { id: 1,  name: draft_email,    cost_axis: input,          bands: [S],     hypothesis: haiku,  over_service: [opus], note: cheap_floor }
+  - { id: 7,  name: summarize_doc,  cost_axis: input,          bands: [M, L],  hypothesis: sonnet, over_service: [opus], note: input_gradient_and_tail }
+  - { id: 10, name: support_vs_kb,  cost_axis: cached_context, bands: [M],     hypothesis: sonnet, over_service: [opus],
+      cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 } }
+  - { id: 15, name: strategy_brief, cost_axis: thinking_depth, bands: [high],  hypothesis: opus,   down_probe: [sonnet],
+      thinking: adaptive, temperature: uncontrolled, bands_are_effort: true, note: thinking_tail }

@@ -1,0 +1,5 @@
+task_id,arm,total_pairs,eligible_pairs,excluded_share,wins_haiku,wins_opus,ties,low_confidence,net_pref,equivalent
+6,off,20,0,1.0,0,0,0,0,,False
+6,on,20,20,0.0,1,12,7,0,0.55,False
+9,off,20,0,1.0,0,0,0,0,,False
+9,on,20,1,0.95,0,1,0,0,1.0,False

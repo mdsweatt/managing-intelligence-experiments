@@ -1,0 +1,220 @@
+run_id: run-20260628T043414Z-859f8e
+created_utc: '2026-06-28T04:34:14.634231+00:00'
+harness_version: 0.5.0
+sdk_version: 0.109.2
+matrix_path: runs/phase1c-pilot.yaml
+manifest_path: fixtures/manifest-phase1c.yaml
+n_per_cell: 1
+guard:
+  calls: 0
+  input_tokens: 0
+  output_tokens: 0
+  max_calls: 13
+  max_input_tokens: 120000
+  max_output_tokens: 120000
+units:
+- cell_key: t6:S:haiku:factorial
+  task_id: 6
+  band: S
+  model_role: haiku
+  role_label: factorial
+  family: standard
+  config:
+    model_role: haiku
+    model_id: claude-haiku-4-5-20251001
+    band: S
+    effort: null
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 64000
+    skill: null
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t6:S:haiku:factorial:skill-on
+  task_id: 6
+  band: S
+  model_role: haiku
+  role_label: factorial
+  family: standard
+  config:
+    model_role: haiku
+    model_id: claude-haiku-4-5-20251001
+    band: S
+    effort: null
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 64000
+    skill: short-form-copy-scaffold-v1
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t6:S:sonnet:factorial
+  task_id: 6
+  band: S
+  model_role: sonnet
+  role_label: factorial
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: null
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t6:S:sonnet:factorial:skill-on
+  task_id: 6
+  band: S
+  model_role: sonnet
+  role_label: factorial
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: short-form-copy-scaffold-v1
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t6:S:opus:factorial
+  task_id: 6
+  band: S
+  model_role: opus
+  role_label: factorial
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: null
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t6:S:opus:factorial:skill-on
+  task_id: 6
+  band: S
+  model_role: opus
+  role_label: factorial
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: short-form-copy-scaffold-v1
+  fixture_sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+  n: 1
+- cell_key: t9:S:haiku:factorial
+  task_id: 9
+  band: S
+  model_role: haiku
+  role_label: factorial
+  family: standard
+  config:
+    model_role: haiku
+    model_id: claude-haiku-4-5-20251001
+    band: S
+    effort: null
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 64000
+    skill: null
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+- cell_key: t9:S:haiku:factorial:skill-on
+  task_id: 9
+  band: S
+  model_role: haiku
+  role_label: factorial
+  family: standard
+  config:
+    model_role: haiku
+    model_id: claude-haiku-4-5-20251001
+    band: S
+    effort: null
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 64000
+    skill: long-form-draft-scaffold-v1
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+- cell_key: t9:S:sonnet:factorial
+  task_id: 9
+  band: S
+  model_role: sonnet
+  role_label: factorial
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: null
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+- cell_key: t9:S:sonnet:factorial:skill-on
+  task_id: 9
+  band: S
+  model_role: sonnet
+  role_label: factorial
+  family: standard
+  config:
+    model_role: sonnet
+    model_id: claude-sonnet-4-6
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: long-form-draft-scaffold-v1
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+- cell_key: t9:S:opus:factorial
+  task_id: 9
+  band: S
+  model_role: opus
+  role_label: factorial
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: null
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+- cell_key: t9:S:opus:factorial:skill-on
+  task_id: 9
+  band: S
+  model_role: opus
+  role_label: factorial
+  family: standard
+  config:
+    model_role: opus
+    model_id: claude-opus-4-8
+    band: S
+    effort: high
+    thinking: 'off'
+    temperature: omitted
+    max_tokens: 128000
+    skill: long-form-draft-scaffold-v1
+  fixture_sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+  n: 1
+skipped_bands: []

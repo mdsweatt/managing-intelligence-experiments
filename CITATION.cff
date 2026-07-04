@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this code or dataset, please cite it as below."
+title: "Managing Intelligence — Experiment 1: the token economics of knowledge work (code + data)"
+authors:
+  - family-names: Sweatt
+    given-names: Mike
+    affiliation: TetradStudios
+type: dataset
+version: 1.0.0
+date-released: 2026-07-04
+license: MIT
+abstract: >-
+  Pre-registered experiments measuring the token economics of LLM knowledge
+  work: within-cell cost variance (H1), the causal effect of frozen output
+  scaffolds ("skills") on output variance, cost, and quality (H5-H8), and a
+  documented LLM-judge calibration failure against a blind human panel.
+  Includes the full capture harness, frozen fixtures, raw per-call usage
+  records, analysis code, and reports. Code is MIT; data and documents are
+  CC BY 4.0 (see LICENSE-DATA).
+keywords:
+  - token economics
+  - LLM cost measurement
+  - LLM-as-judge
+  - pre-registration
+  - prompt scaffolding

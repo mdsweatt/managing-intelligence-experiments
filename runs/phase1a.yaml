@@ -1,0 +1,71 @@
+# runs/phase1a.yaml — Experiment 1, Phase 1a run matrix (machine form of SPEC.md §3)
+# The harness consumes THIS, not the markdown table. Keep in sync with docs/SPEC.md.
+
+meta:
+  phase: "1a"
+  derived_from: docs/SPEC.md
+  n_per_cell: 20                       # flat, pre-committed, uniform. Never extend per-cell.
+  universal_opus_status: gated         # the +Opus expansion is conditional on the Phase 0 gate
+  gate: runs/phase0-calibration.yaml
+  cost_ceiling_usd: 500                # owner-set 2026-06-16; harness aborts on breach
+  verified_live: 2026-06-16            # docs/live-verification-2026-06-16.md
+  rate_tier: { itpm: 450000, otpm: 90000, rpm: 1000, as_of: 2026-06-22 }  # Haiku/Sonnet; Opus ITPM 2M / OTPM 200k. Re-verified live 2026-06-22 (live-verification addendum); ~100k L-band fits one call
+
+defaults:
+  max_tokens: model_ceiling            # set to model max output; never omit. STREAM every call (ceilings >>16k) and read final usage.
+  temperature: omit                    # verified 2026-06-16: never send it (Opus 4.8 rejects it; Sonnet rejects w/ thinking on). Record as 'omitted'.
+  effort: high                         # non-#15 Sonnet/Opus cells; Haiku has no effort knob
+
+# Headline waste comparison = hold the hypothesis cell's config fixed, swap only the model (SPEC D2).
+over_service:
+  rule: match_hypothesis_config_swap_model
+  optional_as_used: false              # second Opus condition (thinking-on, effort high) — deferred
+
+# VERIFIED LIVE 2026-06-16 (docs/live-verification-2026-06-16.md).
+# tokenizer: tok-hs = Haiku+Sonnet (shared); tok-opus differs ~+35% -> TWO token counts per fixture.
+models:
+  haiku:  { id: claude-haiku-4-5-20251001, tokenizer: tok-hs,   cache_min: 4096, max_output: 64000 }
+  sonnet: { id: claude-sonnet-4-6,         tokenizer: tok-hs,   cache_min: 1024, max_output: 128000 }  # max_output 64000 -> 128000
+  opus:   { id: claude-opus-4-8,           tokenizer: tok-opus, cache_min: 1024, max_output: 128000 }
+
+# bands list the selection points along each task's DOMINANT cost axis (load-band §4).
+# 'over_service' / 'down_probe' are extra models run per band (config per over_service.rule).
+tasks:
+  - { id: 1,  name: draft_email,        cost_axis: input,          bands: [S],          hypothesis: haiku,  over_service: [opus], down_probe: [sonnet], note: full_ladder_rep }
+  - { id: 2,  name: rewrite_retone,     cost_axis: input,          bands: [S, M],       hypothesis: haiku,  over_service: [opus] }
+  - { id: 3,  name: factual_q,          cost_axis: input,          bands: [S],          hypothesis: haiku,  over_service: [opus] }
+  - { id: 4,  name: classify_triage,    cost_axis: input,          bands: [S],          hypothesis: haiku,  over_service: [opus], equivalence: exact_match }
+  - { id: 5,  name: translate,          cost_axis: input,          bands: [S, M],       hypothesis: haiku,  over_service: [opus] }
+  - { id: 6,  name: short_form_copy,    cost_axis: output,         bands: [S],          hypothesis: sonnet, over_service: [opus], down_probe: [haiku] }
+  - { id: 7,  name: summarize_doc,      cost_axis: input,          bands: [S, M, L],    hypothesis: sonnet, over_service: [opus], down_probe: [haiku], note: full_ladder_rep }
+  - { id: 8,  name: extract_structured, cost_axis: input,          bands: [S, M, L],    hypothesis: sonnet, over_service: [opus], down_probe: [haiku], equivalence: schema_match }
+  - { id: 9,  name: long_form_draft,    cost_axis: output,         bands: [S, M],       hypothesis: sonnet, over_service: [opus], note: verify_band_nonoverlap }
+
+  # --- cache-heavy: warm-once-read-many; assert cache hit on every read; ≥4096 floor when Haiku-probed
+  - { id: 10, name: support_vs_kb,      cost_axis: cached_context, bands: [M, L],       hypothesis: sonnet, over_service: [opus], down_probe: [haiku],
+      cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 } }
+  - { id: 11, name: code_edit_known,    cost_axis: cached_context, bands: [M, L],       hypothesis: sonnet, over_service: [opus], down_probe: [haiku],
+      cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 } }
+  - { id: 12, name: qa_vs_reference,    cost_axis: cached_context, bands: [M, L],       hypothesis: sonnet, over_service: [opus], down_probe: [haiku],
+      cache: { mode: warm_once_read_many, assert_hit: true, min_floor_if_haiku: 4096 } }
+
+  # --- thinking-depth: bands ARE effort levels common to Opus+Sonnet; thinking adaptive; temp uncontrolled
+  - { id: 15, name: strategy_brief,     cost_axis: thinking_depth, bands: [low, high, max], hypothesis: opus, down_probe: [sonnet],
+      thinking: adaptive, temperature: uncontrolled, bands_are_effort: true }
+
+  # --- multi-turn: pre-scripted user turns; capture per-turn; matched-thinking over-service
+  - { id: 16, name: debug_multiturn,    cost_axis: turns,          bands: [few, many],  hypothesis: sonnet, over_service: [opus],
+      thinking: adaptive, multiturn: { scripted: true, per_turn_capture: true } }
+  - { id: 17, name: iterative_refine,   cost_axis: turns,          bands: [few, many],  hypothesis: sonnet, over_service: [opus],
+      multiturn: { scripted: true, per_turn_capture: true } }
+
+  # --- payload: large file via tool-result/attachment, not the prompt
+  - { id: 18, name: analyze_dataset,    cost_axis: payload,        bands: [M, L],       hypothesis: sonnet, over_service: [opus] }
+  - { id: 19, name: batch_files,        cost_axis: payload,        bands: [M, L],       hypothesis: sonnet, over_service: [opus], note: sequential_loop_stays_1a }
+
+  # --- creative meta-prompting (read context → write an image-gen prompt). Added 2026-06-17,
+  #     demand-driven (charter §5). Output axis like #6/#9; tests whether OPEN-ENDED generation
+  #     bands as tightly as structured generation (H1). Generative → D3 rubric (no equivalence field).
+  - { id: 22, name: image_prompt_gen,   cost_axis: output,         bands: [S],          hypothesis: sonnet, over_service: [opus], down_probe: [haiku], note: creative_generation_demand_driven }
+
+# Phase 1b (agentic): #13, #14, #20, #21 — deferred, specified separately when 1a lands.

@@ -1,0 +1,35 @@
+# fixtures/skills/manifest.yaml — Experiment 1c frozen-skill registry (peer of fixtures/manifest.yaml).
+#
+# A "skill" is a frozen, structured output scaffold injected as a `system` block on the skill-on arm
+# of the determinism A/B (charter §3 H5/H6). It is governed by the same immutability contract as a
+# fixture (CLAUDE.md invariant 5): a frozen skill carries a real sha256 over its bytes
+# (harness.hashing.skill_hash), and the harness refuses to run an unfrozen skill (assemble
+# require_frozen=True). `file` is relative to fixtures_root.
+#
+# STATUS: FROZEN 2026-06-27 — every skill reviewed (owner + an independent Gemini review), rewritten
+# as a single-pass output scaffold (no hidden self-check; thinking is off in 1c), sha256 pinned via
+# harness.hashing.skill_hash, frozen:true. Identical text across all three models (never tuned per
+# model — that would break the same-artifact control, invariant 6). To revise a frozen skill, cut a
+# new id (…-v2) — never edit bytes under a frozen hash.
+schema_version: 1
+skills:
+  - id: classify-triage-scaffold-v1     # placebo control (task #4): already-deterministic, skill should NOT move CoV
+    file: skills/classify-triage-scaffold-v1.md
+    sha256: 9e34d01e69b913963598ee506aed554f9d2217f27ca676e845e97129164b66a2
+    frozen: true
+    applies_to: [4]
+    note: FROZEN 2026-06-27
+
+  - id: short-form-copy-scaffold-v1      # high output-latitude (task #6): Lever A should bite
+    file: skills/short-form-copy-scaffold-v1.md
+    sha256: a31b584f4526c4da250fcd1d1be9c522184ad76c711015b6ab90524ee5d0b6a3
+    frozen: true
+    applies_to: [6]
+    note: FROZEN 2026-06-27
+
+  - id: long-form-draft-scaffold-v1      # high output-latitude (task #9): Lever A should bite
+    file: skills/long-form-draft-scaffold-v1.md
+    sha256: 4638e369afa2d085de1db1982b0032d675eafacd478166afab7ef7d2eb484535
+    frozen: true
+    applies_to: [9]
+    note: FROZEN 2026-06-27

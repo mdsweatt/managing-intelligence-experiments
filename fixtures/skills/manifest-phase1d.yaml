@@ -1,0 +1,83 @@
+# fixtures/skills/manifest-phase1d.yaml — Experiment 1d frozen-skill registry.
+#
+# A dedicated manifest so the FROZEN 1c registry (fixtures/skills/manifest.yaml) stays byte-
+# untouched; self-contained for the whole 1d ladder: the 6 NEW example-style scaffolds plus byte-
+# identical copies of the three frozen 1c entries (#4 placebo / #6 / #9 — same files, same hashes).
+# Run: pass this via --skill-manifest alongside fixtures/manifest-phase1d.yaml (see runs/phase1d.yaml).
+#
+# The 6 new skills are the pilot-tuned scaffolds (S2 review 2026-07-02 + Gemini re-review triage,
+# commit be55210): EXAMPLE-style — a format example from an unrelated domain + a Rules line carrying
+# the numeric demand cue set from the measured natural ranges (analysis/output/phase1d-pilot-
+# findings.md). Identical text across all three models (invariant 6). Canonical bytes live HERE
+# (fixtures/skills/…); the fixtures/task-*/scaffold-example-DRAFT.md drafts they were copied from
+# are deleted at freeze to prevent divergence.
+#
+# STATUS: FROZEN 2026-07-02 — owner reviewed the staged bytes and signed off; frozen:true flipped
+# byte-identically (hashes pinned at staging, re-verified at the flip). To revise, cut a new id
+# (…-v2) — never edit bytes under a frozen hash.
+schema_version: 1
+skills:
+  # ================= NEW 1d skills (pilot-tuned cues; owner sign-off = freeze) =================
+  - id: email-reply-scaffold-v1          # CAP: <=100 words (natural min 125w across the ladder)
+    file: skills/email-reply-scaffold-v1.md
+    sha256: 8bd14bfa382c1053411e5576ee162590d4f05480a9b5b2b8f202b2998c302b57
+    frozen: true
+    applies_to: [1]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  - id: minutes-recap-scaffold-v1        # CAP: <=100 words (natural min 130w)
+    file: skills/minutes-recap-scaffold-v1.md
+    sha256: efadf0dbf283c2e2426295339d3e7d1bfc649b832bab628eecad950f08f4d1e3
+    frozen: true
+    applies_to: [7]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  - id: extract-fields-scaffold-v1       # CAP: <=90 words (natural min 118w)
+    file: skills/extract-fields-scaffold-v1.md
+    sha256: 31ab80d6ea4ca8176bdaa860676b02adba1ad7597d6a76e88efe2f05fa20d42e
+    frozen: true
+    applies_to: [8]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  - id: strategy-brief-1d-scaffold-v1    # MANDATE: ~1400w ±10% (natural max 1139w)
+    file: skills/strategy-brief-1d-scaffold-v1.md
+    sha256: 3126559022276e5c0aeb381ece8f6709ce0e8547ce10127f7d1390263a57a0f7
+    frozen: true
+    applies_to: [15]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  - id: spec-draft-scaffold-v1           # MANDATE: >=12 reqs / >=3 ACs / ~1450w ±10% (natural max 1158w)
+    file: skills/spec-draft-scaffold-v1.md
+    sha256: 4a3ae65aa86baa9927c7841efcad8d2c08a0085f84d704058444a7d8e11ada73
+    frozen: true
+    applies_to: [23]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  - id: status-report-scaffold-v1        # MANDATE: ~550w ±10% + per-item elaboration (natural max 432w)
+    file: skills/status-report-scaffold-v1.md
+    sha256: a7353befc1bc1f542871536960d6a6cccf96e1b552da4ec75e6184955aedb1c2
+    frozen: true
+    applies_to: [24]
+    note: FROZEN 2026-07-02 (owner-reviewed; pilot-tuned numeric cue; byte-identical to the staged review copy)
+
+  # ================= REUSED 1c skills — byte-identical copies (FROZEN 2026-06-27) =================
+  - id: classify-triage-scaffold-v1      # placebo control (task #4)
+    file: skills/classify-triage-scaffold-v1.md
+    sha256: 9e34d01e69b913963598ee506aed554f9d2217f27ca676e845e97129164b66a2
+    frozen: true
+    applies_to: [4]
+    note: FROZEN 2026-06-27 (1c; reused verbatim)
+
+  - id: short-form-copy-scaffold-v1      # CAP (measured, 1c): <=60w vs natural 139-212w
+    file: skills/short-form-copy-scaffold-v1.md
+    sha256: a31b584f4526c4da250fcd1d1be9c522184ad76c711015b6ab90524ee5d0b6a3
+    frozen: true
+    applies_to: [6]
+    note: FROZEN 2026-06-27 (1c; reused verbatim)
+
+  - id: long-form-draft-scaffold-v1      # MANDATE (measured, 1c): ~800w vs natural 255-696w
+    file: skills/long-form-draft-scaffold-v1.md
+    sha256: 4638e369afa2d085de1db1982b0032d675eafacd478166afab7ef7d2eb484535
+    frozen: true
+    applies_to: [9]
+    note: FROZEN 2026-06-27 (1c; reused verbatim)

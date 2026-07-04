@@ -1,0 +1,5 @@
+Why is the adjacent-interval case failing, and how do I fix merge_intervals so all three assertions pass? Explain the root cause briefly, then show the corrected function.
+===TURN===
+Your fix passes those three, but a colleague reports a new problem: merge_intervals mutates and reorders the list they pass in, so their data is getting scrambled elsewhere. Make merge_intervals leave the caller's input untouched, and confirm what changed.
+===TURN===
+Good. Last thing: callers sometimes pass lists like [[1, 4], [2, 6]] instead of tuples, and our return type is inconsistent as a result. Make the return type always a list of tuples, add a type hint and a one-line docstring, and show the final function.

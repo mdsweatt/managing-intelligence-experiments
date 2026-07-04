@@ -1,0 +1,1 @@
+Introducing Cadence, the workflow analytics platform that turns scattered project data into one live dashboard. Cadence connects your existing tools, flags bottlenecks before they slip deadlines, and gives operations leaders a single weekly view of team capacity, cycle time, and delivery risk across every active initiative.

@@ -1,0 +1,102 @@
+# fixtures/neutral/manifest.yaml — Experiment 1d neutral-system-block registry (charter §5 H8).
+#
+# A "neutral" block is the H8 CONTROL arm: a frozen `system` block that is per-task length-matched to
+# that task's real skill (within ~±10% words) but holds ONLY generic, task-directed, structure-free
+# role/quality framing — NO format/schema, NO required sections, NO scope list, and NO length guidance
+# (not even soft cues like "concise"/"thorough"). It isolates "the scaffold's structure" from "a
+# task-directed system block is present and engaged" (charter §5 H8; H8 kill-condition: the neutral
+# arm reproduces ≥ ½ of the skill's CoV_output tightening => the effect is priming, not structure).
+#
+# Kept SEPARATE from fixtures/skills/manifest.yaml on purpose: the frozen skills registry stays
+# untouched, and a neutral block is by construction NOT a skill. Same immutability contract
+# (CLAUDE.md invariant 5): a frozen block carries a real sha256 = harness.hashing.skill_hash(bytes),
+# identical text across all models (invariant 6). To revise, cut a new id (…-v2) — never edit bytes.
+#
+# STATUS: reviewed 2026-07-02 (owner + independent Gemini review, mirroring the 1c skill freeze).
+# The review found the v1 blocks carried SCOPE constraints — faithfulness/anti-invention clauses
+# ("do not introduce claims/numbers ... not supported"), an "even-handedly" echo of the #9 skill,
+# and a soft brevity cue ("in a busy feed") — which belong to the SKILL's structure under test
+# (charter §3 H8: "format/schema + scope/length constraints"), not to the control. A control arm
+# carrying them could tighten CoV_output on its own and falsely kill H8. Per the revise rule the v1
+# bytes are untouched: **-v2 supersedes -v1** (v2 = pure role/quality framing, re-length-matched:
+# #6 129/136 = -5.1%, #9 155/158 = -1.9%). v1 entries are retained below for the record and for
+# harness-mechanics tests only — `runs/phase1d.yaml` must reference the -v2 ids. The roster's
+# remaining tasks get their neutral blocks with the task ladder (S2/S4) under the same rule:
+# role/quality framing ONLY — no faithfulness/scope clauses, no stance words, no audience-attention
+# cues that imply length.
+schema_version: 1
+neutral:
+  # ===== 1d ladder blocks — FROZEN 2026-07-02 (owner sign-off after the third Gemini review's
+  # semantic-leak triage). Length-matched ±10% (words) to the pilot-tuned skills; role/quality
+  # framing ONLY per the -v2 rule (no faithfulness/scope clauses, no stance words, no
+  # length/format/section cues). =====
+  - id: email-reply-neutral-v1         # H8 control for task #1 (172w vs skill 176w, -2.3%)
+    file: neutral/email-reply-neutral-v1.md
+    sha256: cbea95a8260352d820d3adf772656d64038bd2386ba21d25a91abf2708ba4d29
+    frozen: true
+    applies_to: [1]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  - id: minutes-recap-neutral-v1       # H8 control for task #7 (153w vs skill 162w, -5.6%)
+    file: neutral/minutes-recap-neutral-v1.md
+    sha256: 0e297abdf679fe6278b959536ed6d34ea89b45da8b5dcf44d7a223d81e0e1d8d
+    frozen: true
+    applies_to: [7]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  - id: extract-fields-neutral-v1      # H8 control for task #8 (136w vs skill 144w, -5.6%)
+    file: neutral/extract-fields-neutral-v1.md
+    sha256: ab7d532428a2188ba89ac1b8ebe9d37675e4187a63a78f748d56a979d46ee104
+    frozen: true
+    applies_to: [8]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  - id: strategy-brief-1d-neutral-v1   # H8 control for task #15 (464w vs skill 503w, -7.8%)
+    file: neutral/strategy-brief-1d-neutral-v1.md
+    sha256: 59a590a44f17eac0ba1c2528e2366f854092aa6209f7beb5ec7d7235f521f9ea
+    frozen: true
+    applies_to: [15]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  - id: spec-draft-neutral-v1          # H8 control for task #23 (288w vs skill 309w, -6.8%)
+    file: neutral/spec-draft-neutral-v1.md
+    sha256: 4fa7829e4dc3d5a77cc37311bd43561aba6a6fb3f1c3c94230f54f507f44b965
+    frozen: true
+    applies_to: [23]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  - id: status-report-neutral-v1       # H8 control for task #24 (338w vs skill 358w, -5.6%)
+    file: neutral/status-report-neutral-v1.md
+    sha256: 3fdedec313856e3401f7f5134b63968132f2817ab3b478435f0b6323a13f407a
+    frozen: true
+    applies_to: [24]
+    note: FROZEN 2026-07-02 (owner-reviewed after the Gemini semantic-leak triage; byte-identical to the staged review copy)
+
+  # ===== frozen #6/#9 pair (2026-07-02 review cut) =====
+  - id: short-form-copy-neutral-v2     # H8 control for task #6 (length-matched to short-form-copy-scaffold-v1)
+    file: neutral/short-form-copy-neutral-v2.md
+    sha256: c7a93b1850bce26e47055bac5bea189fd682dff4089e401c4a81b46ec18a3d51
+    frozen: true
+    applies_to: [6]
+    note: length-matched 129w vs skill 136w (-5.1%); role/quality framing only (2026-07-02 review cut, supersedes -v1)
+
+  - id: long-form-draft-neutral-v2     # H8 control for task #9 (length-matched to long-form-draft-scaffold-v1)
+    file: neutral/long-form-draft-neutral-v2.md
+    sha256: 8c495c910f67b3424d1458e1069e74b50f44d47ebd82ab6a65c5ed4369f47df6
+    frozen: true
+    applies_to: [9]
+    note: length-matched 155w vs skill 158w (-1.9%); role/quality framing only (2026-07-02 review cut, supersedes -v1)
+
+  - id: short-form-copy-neutral-v1     # SUPERSEDED by -v2 (2026-07-02 review: carried scope/faithfulness clauses). Do not run.
+    file: neutral/short-form-copy-neutral-v1.md
+    sha256: 0ff5f723649b9123536b75a3912f8a2213ea879f96c2cecf449d7ffe8685fa77
+    frozen: true
+    applies_to: [6]
+    note: SUPERSEDED — length-matched 144w vs skill 136w (+5.9%); retained for the record + mechanics tests
+
+  - id: long-form-draft-neutral-v1     # SUPERSEDED by -v2 (2026-07-02 review: carried scope/faithfulness clauses). Do not run.
+    file: neutral/long-form-draft-neutral-v1.md
+    sha256: 9d4b81e5a2cabe2c310b44f53d460f53b6d31cbfef94f54746f1234dd3fcf4c7
+    frozen: true
+    applies_to: [9]
+    note: SUPERSEDED — length-matched 169w vs skill 158w (+7.0%); retained for the record + mechanics tests

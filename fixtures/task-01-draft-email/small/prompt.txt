@@ -1,0 +1,1 @@
+Draft a short, professional business email from the brief below. Output a subject line, then the email body. Keep it concise (under 150 words), courteous, and direct, clearly stating the ask. Use the recipient's name in the greeting. Do not invent details beyond the brief; output only the email (subject + body), no commentary.

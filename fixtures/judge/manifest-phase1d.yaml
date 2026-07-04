@@ -1,0 +1,217 @@
+# fixtures/judge/manifest-phase1d.yaml — Experiment 1d cross-family quality-judge instrument.
+#
+# The "honest ruler" (charter v0.7 §5): 1c's judge was Opus 4.8 — the SAME family as one model-
+# under-test, a logged self-preference risk. 1d swaps to a CROSS-FAMILY judge: the google-genai SDK
+# calling a pinned Gemini Pro model, authenticated by a METERED GEMINI_API_KEY (docs/phase1d-build-
+# notes.md — NOT the AI Pro subscription, NOT the Antigravity SDK). This is an INSTRUMENT change
+# only; the §5 "Anthropic-first" scope of the models UNDER test is untouched.
+#
+# STATUS: FROZEN 2026-07-02 (judge_hash pinned below; contract in docs/phase1d-judge-spec.md).
+# Sequence honored: format-neutral rubrics authored for all 8 ladder tasks (2026-07-02; #6/#9 check
+# text reused from 1c unchanged; prompt files = the frozen 1c bytes, referenced by path — already
+# substance-first, charter §5.147) → skill-off pilot → code_checks numbers set to the pilot-tuned
+# scaffold cues → skills/neutral blocks frozen (owner-signed) → judge MICRO-PILOT on real pilot
+# outputs (6 metered calls, $0.049, usage in analysis/output/phase1d-judge-micropilot-usage.jsonl):
+# live surface re-verified (thinking_budget accepted; ~306-547 thinking tok/call — SOFT budget
+# confirmed again), verdict JSON parsed with correct check ids on all calls, and one instrument
+# incoherence caught + fixed pre-freeze (#1 faithful re-scoped: the reply's forward commitments are
+# its content, not inventions — the skill itself demands a timeframe). load_judge now ASSERTS the
+# pinned judge_hash on every load — to revise anything, cut a NEW instrument; never edit bytes here.
+schema_version: 1
+status: FROZEN
+judge_hash: 5fd08ff3287cbd32e3f6bbec923a9398ae9bc59143860eab90abbc73632d0e81   # pinned 2026-07-02 at FREEZE (micro-pilot + live re-verify done; see docs/phase1d-judge-spec.md)
+
+# NEW in 1d (both folded into judge_hash by load_judge — a cross-family judge + its call surface
+# change grading behaviour, so they are part of the instrument's identity):
+provider: gemini
+judge_model: gemini-3.1-pro-preview   # CONFIRMED via the step-0 re-probe (2026-06-30, n=5, temp 0):
+                                      # 3.1-pro-preview ACCEPTS a numeric thinking_budget (no 400),
+                                      # 5/5 calls, ~172 tok/call, total CoV ~0.05 — cheaper + tighter
+                                      # than 2.5-pro @ 256 (~202 tok, CoV 0.08). PREVIEW-ONLY, pinned
+                                      # deliberately (1d is a point-in-time snapshot). VERIFY-LIVE
+                                      # again at FREEZE — do not assert this from memory on rebuild.
+judge_config:
+  thinking_budget: 256                # ACCEPTED by 3.1-pro-preview (field is thinking_budget, NOT
+                                      # thinking_level). It is SOFT, not a hard cap: the tiny probe
+                                      # spent ~139/256, but a real 610-tok rubric prompt spent 434
+                                      # (E2E smoke 2026-06-30) — thinking scales with prompt size and
+                                      # CAN exceed the budget. => pin real cost via the later micro-
+                                      # pilot on real prompts, NOT the tiny probe. gemini-2.5-pro (GA
+                                      # fallback) rejects budget 0 (-> HTTP 400) but accepts a fixed one.
+  temperature: 0                      # deterministic + replayable (matches analysis/gemini_smoke.py).
+  max_output_tokens: 2048             # same output ceiling as the 1c judge.
+
+k: 3            # replicate judgments per item; majority vote; < 2/3 agreement => low_confidence.
+margin_pp: 10   # H6 tier-equivalence margin — UNCHANGED from 1c (the kill-condition is frozen).
+
+# PLACEHOLDER prompts — reuse the FROZEN 1c prompt files verbatim (by path) until the 1d format-
+# neutral rubric + pairwise prompts are authored. Referenced READ-ONLY; 1c's bytes are never edited.
+prompts:
+  rubric:
+    file: judge/rubric-judge-prompt.md
+    sha256: cc1d6ec4c1e41eff1c763524d331d60b0b9223e54786029938971174489add68
+  pairwise:
+    file: judge/pairwise-judge-prompt.md
+    sha256: cdedfcee620777bc80bdb36b5d0848a6c0fbc2cbbec2abb5032d2801cdf65e94
+
+# FORMAT-NEUTRAL rubrics (charter §5.147) — ALL 8 generative ladder tasks, authored 2026-07-02.
+# Eligibility for the blind pairwise is gated ONLY by the check marked `gate: true` (faithfulness) —
+# substance independent of structure. Everything else (semantic quality checks + the code-graded
+# format checks) is still scored + reported by arm, but NEVER gates: a faithful yet format-
+# noncompliant skill-off/loose output stays ELIGIBLE, closing 1c's coverage hole (0 eligible
+# skill-off pairs) so H6's "narrows the gap more than a loose prompt" clause is finally testable.
+# The pairwise prompt is already substance-first ("Format compliance is NOT a discriminator").
+# #4 stays the exact-match placebo; #6/#9 check text is the reused 1c set, unchanged.
+#
+# `code_checks` (new 1d tasks only) declares the OBJECTIVE format checks in the hashed instrument —
+# interpreted by analysis/quality.py (word_max / word_range / sections_all / regex_count), never sent
+# to the LLM; #6/#9 keep their legacy in-code checks (analysis/quality.py code_checks), unchanged so
+# 1c grading is not reinterpreted. PROVISIONAL until FREEZE: the word_max/word_range/regex_count
+# NUMBERS below track the scaffolds' post-pilot numeric demand cues (design spine: every scaffold
+# gets an explicit cap ceiling / mandate floor set clearly outside the measured natural range) —
+# they are re-checked against the tuned scaffolds before status flips to FROZEN. Check TEXT is final
+# unless the owner review says otherwise.
+rubrics:
+  "4":
+    grader: exact_match
+    gold: P1_Critical
+    pairwise: false
+
+  # --- reused 1c pair (check text unchanged; legacy in-code format checks) ----------------------
+  "6":
+    pairwise: true
+    checks:
+      - id: cta_valid
+        type: binary
+        text: "Exactly one call to action, and it invites the reader to book or request a demo."
+      - id: hook_quality
+        type: graded
+        scores: [0, 1, 2]
+        text: "The post opens with a distinct one-line hook (not body text). Score 0-2: 0 = generic or absent, 1 = present but weak, 2 = sharp and specific."
+      - id: faithful
+        type: binary
+        gate: true   # <-- the ONLY pairwise-eligibility gate (substance, format-independent)
+        text: "Every product claim in the post is supported by the source blurb; nothing is invented."
+  "9":
+    pairwise: true
+    checks:
+      - id: recommendation_upfront
+        type: binary
+        text: "A single explicit recommendation (renew the current vendor OR pilot a replacement) is stated up front, in the first line."
+      - id: faithful
+        type: binary
+        gate: true   # <-- the ONLY pairwise-eligibility gate (substance, format-independent)
+        text: "No invented vendor names or dollar figures beyond the brief; every specific traces to the brief."
+
+  # --- new 1d tasks (S2 fixtures frozen 2026-07-02; scaffolds PROVISIONAL until post-pilot) -----
+  "1":   # email_reply (intended CAP)
+    pairwise: true
+    code_checks:
+      - { id: words, type: word_max, max: 100 }          # = the scaffold's cap cue (pilot-tuned 2026-07-02; natural min 125w)
+      - { id: bullets, type: regex_count, pattern: '(?m)^\s*[-*]\s+', min: 1 }
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "The reply's account of the customer's situation is supported by the incoming email — no invented order details, prior interactions, or existing-policy claims stated as established fact. The reply's own forward-looking commitments and expectations (what will be done and when) are its legitimate content, not inventions."
+      - id: addresses_issues
+        type: binary
+        text: "The reply addresses each concrete issue the customer raised: the refund that never arrived, the two unanswered emails, and the request for an explanation of the delay."
+      - id: next_step
+        type: binary
+        text: "The reply commits to a concrete next step or resolution the customer can hold it to."
+  "7":   # minutes_recap (intended CAP)
+    pairwise: true
+    code_checks:
+      - { id: words, type: word_max, max: 100 }          # = the scaffold's cap cue (pilot-tuned 2026-07-02; natural min 130w)
+      - id: sections
+        type: sections_all
+        patterns: { decisions: 'decisions', actions: 'action\s+items?' }
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "Every decision, owner, and date in the recap traces to the transcript; no invented owners, dates, or budget figures."
+      - id: decisions_complete
+        type: binary
+        text: "The recap captures the meeting's key decisions: the chosen campaign theme, and starting organic/email while holding paid social until Finance confirms the budget."
+      - id: owners_correct
+        type: binary
+        text: "Every action item is attributed to the person who actually took it in the transcript, with its due date where one was stated."
+  "8":   # extract_fields (intended CAP)
+    pairwise: true
+    code_checks:
+      - { id: words, type: word_max, max: 90 }           # = the scaffold's cap cue (pilot-tuned 2026-07-02; natural min 118w)
+      - id: fields
+        type: sections_all
+        patterns: { reference_id: 'reference\s+id', category: 'category', severity: 'severity',
+                    item: 'item', when: 'when', cause: 'cause', resolution: 'resolution',
+                    followups: 'follow-?ups?' }
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "Every extracted value is supported by the incident report; no invented times, counts, names, or severity judgments beyond the report's own assessment."
+      - id: complete
+        type: binary
+        text: "The extraction captures the incident's key facts — what failed, the cause, the timeline, the customer impact, the resolution, and the agreed follow-ups — without major omissions."
+  "15":  # strategy_brief_1d (intended MANDATE, thinking-on)
+    pairwise: true
+    code_checks:
+      - id: sections
+        type: sections_all
+        patterns: { situation: 'situation', objectives: 'objectives', options: 'options',
+                    recommendation: 'recommendation', risks: 'risks', next_steps: 'next\s+steps' }
+      - { id: words, type: word_range, min: 1260, max: 1540 }   # = the scaffold's ~1400w ±10% mandate cue (pilot-tuned 2026-07-02; natural max 1139w)
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "Every claim and figure traces to the provided context; no invented market data, store counts, costs, or competitor details. Reasoned analysis, trade-offs, and projections argued from the given context are elaboration, not invention."
+      - id: options_reasoned
+        type: binary
+        text: "More than one realistic option is genuinely weighed — each considered on its merits with real trade-offs, not straw-manned."
+      - id: recommendation_grounded
+        type: binary
+        text: "The brief reaches a single clear recommendation, with reasoning tied to Brightleaf's specific situation (flattening growth, the competitor's app, cash caution, strong packaged-bean margins)."
+  "23":  # spec_draft (intended MANDATE)
+    pairwise: true
+    code_checks:
+      - { id: req_ids, type: regex_count, pattern: '(?im)^\s*(?:#{1,6}\s*)?SUB-[A-Z0-9]+-\d+', min: 12 }  # = the scaffold's ≥12-requirements cue (pilot-tuned 2026-07-02)
+      - { id: ac_bullets, type: regex_count, pattern: '(?m)^\s*-\s+', min: 36 }   # ≥3 ACs × 12 reqs (the format's only bullets are ACs — a global-count proxy)
+      - { id: words, type: word_range, min: 1305, max: 1595 }   # = the scaffold's ~1450w ±10% mandate cue (natural max 1158w)
+      - id: req_fields
+        type: sections_all
+        patterns: { statement: 'statement', rationale: 'rationale',
+                    acceptance: 'acceptance\s+criteria', verification: 'verification' }
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "Every subsystem requirement is grounded in the source requirement; no invented capabilities, interfaces, or constraints beyond what the source states or directly implies. Decomposing or detailing a stated obligation is elaboration, not invention."
+      - id: coverage
+        type: binary
+        text: "The decomposition covers the source's major obligations — the correct per-aircraft checklist, item confirmation and exception handling, the pushback-readiness gate, who/when recording, tamper-evident retention, dispatch integration, role-based access, dispatcher alerting, and offline operation with reconciliation — without major omissions."
+      - id: verifiable
+        type: binary
+        text: "Requirements are stated in a testable form — for each one, a reviewer could tell what observation would show it satisfied."
+  "24":  # status_report (intended MANDATE)
+    pairwise: true
+    code_checks:
+      - id: sections
+        type: sections_all
+        patterns: { summary: 'summary', progress: 'progress', upcoming: 'upcoming',
+                    risks: 'risks', blockers: 'blockers', health: 'health' }
+      - { id: words, type: word_range, min: 495, max: 605 }     # = the scaffold's ~550w ±10% mandate cue (pilot-tuned 2026-07-02; natural max 432w)
+    checks:
+      - id: faithful
+        type: binary
+        gate: true
+        text: "Every status statement traces to the notes; no invented figures, dates, names, or status claims — schedule and budget figures must match the notes. Explaining an item's impact or plan as implied by the notes is elaboration, not invention."
+      - id: complete
+        type: binary
+        text: "The report reflects the notes' key facts — the 3-of-5 migration progress, the notifications blocker and the 3-to-4-week cutover slip, the staged-rollout plan for the billing/payments risk, the login performance win, and the budget/timeline position — without major omissions."
+
+# judge_hash is intentionally ABSENT while DRAFT — load_judge computes it but does not assert it
+# (gates on status == FROZEN). It is pinned here only at FREEZE, over the FINAL 1d components
+# (provider + judge_config + the format-neutral prompt/rubric bytes).

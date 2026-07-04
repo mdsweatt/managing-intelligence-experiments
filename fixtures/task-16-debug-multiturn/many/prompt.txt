@@ -1,0 +1,15 @@
+Why is the adjacent-interval case failing, and how do I fix merge_intervals so all three assertions pass? Explain the root cause briefly, then show the corrected function.
+===TURN===
+Your fix passes those three, but a colleague reports a new problem: merge_intervals mutates and reorders the list they pass in, so their data is getting scrambled elsewhere. Make merge_intervals leave the caller's input untouched, and confirm what changed.
+===TURN===
+Callers sometimes pass lists like [[1, 4], [2, 6]] instead of tuples, and our return type is inconsistent as a result. Make the return type always a list of tuples, add a type hint and a one-line docstring, and show the final function.
+===TURN===
+Now performance: we call this on batches of ~500k intervals and the sort dominates. When the input is already sorted by start, I want to skip the sort. Add a presorted: bool = False parameter that takes an O(n) fast path when True.
+===TURN===
+A test fails: merge_intervals([(5, 7), (1, 3)], presorted=True) returns garbage because the fast path trusted a lie. I'd rather fail loud than return wrong data — make it raise ValueError if presorted=True but the input isn't actually sorted by start. Show the guard.
+===TURN===
+One upstream source occasionally emits reversed intervals like (3, 1). Add validation that raises ValueError on any interval where start > end, and put the offending interval in the error message. Make sure this runs regardless of the presorted flag.
+===TURN===
+Add two plain-assert tests that would have caught the original bugs: one for the adjacent-merge case and one proving the caller's input list is not mutated or reordered. Show just the test functions.
+===TURN===
+Summarize every bug we fixed in this session as a short changelog (one bullet each), then give me the final intervals.py in full.

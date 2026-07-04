@@ -1,0 +1,24 @@
+# Secrets — never commit the API key
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# OS / IDE
+.DS_Store
+.idea/
+
+# Notes
+# uv.lock IS committed (reproducibility) — do not ignore it.
+# results/ IS committed (captured data is provenance) — do not ignore it.
+.antigravitycli/
+
+# personal scratch / working files — never publish (holds Console billing exports, source PDFs)
+Staging_Area/
+files.zip

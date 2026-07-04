@@ -1,0 +1,47 @@
+{
+  "phase": "done",
+  "run_dir": "results/run-20260702T203102Z-f704f0",
+  "seed": "phase1c",
+  "k": 3,
+  "judge_hash": "5fd08ff3287cbd32e3f6bbec923a9398ae9bc59143860eab90abbc73632d0e81",
+  "model": "gemini-3.1-pro-preview",
+  "chunks_total": 1,
+  "chunks_done": 1,
+  "jobs": [
+    {
+      "name": "batches/redacted-0",
+      "phase": "rubric",
+      "chunk": 1,
+      "round": 1,
+      "done": true,
+      "submitted": "2026-07-03T04:27:19Z"
+    },
+    {
+      "name": "batches/redacted-1",
+      "phase": "rubric",
+      "chunk": 2,
+      "round": 1,
+      "done": true,
+      "submitted": "2026-07-03T05:48:00Z"
+    },
+    {
+      "name": "batches/redacted-2",
+      "phase": "rubric",
+      "chunk": 3,
+      "round": 1,
+      "done": true,
+      "submitted": "2026-07-03T05:58:07Z"
+    },
+    {
+      "name": "batches/redacted-3",
+      "phase": "pairwise",
+      "chunk": 1,
+      "round": 1,
+      "done": true,
+      "submitted": "2026-07-03T06:18:17Z"
+    }
+  ],
+  "failed_final": [],
+  "created": "2026-07-03T03:58:30Z",
+  "judge_manifest": "fixtures/judge/manifest-phase1d.yaml"
+}

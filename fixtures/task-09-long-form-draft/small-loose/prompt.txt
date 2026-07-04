@@ -1,0 +1,1 @@
+Using the brief below, write a memo for Northwind Logistics' leadership with your recommendation on the routing-vendor decision. Output only the memo.

@@ -1,0 +1,34 @@
+You are a data-extraction system. Extract structured data from the incident report below into a single JSON object that exactly matches the schema. Output ONLY the JSON object — no prose, no markdown code fences, no commentary before or after.
+
+Schema (one JSON object):
+{
+  "incidents": [
+    {
+      "incident_id": string,            // stable identifier, e.g. "INC4101"
+      "detection_date": string,         // date as written in the document, e.g. "first of August"; "" if not stated
+      "detection_time_utc": string,     // 24-hour HH:MM, e.g. "02:14"; "" if not stated
+      "detection_method": string,       // how it was detected, e.g. "automated latency monitor on the checkout service"; "" if not stated
+      "severity": string,               // exactly one of "SEV1", "SEV2", "SEV3", "SEV4"
+      "responding_engineer": string,    // full name of the primary responder; "" if not named
+      "incident_commander": string,     // full name of the incident commander; "" if none engaged
+      "root_cause": string,             // one concise sentence
+      "customer_impact": string,        // one concise sentence
+      "affected_count": integer | null, // principal affected quantity as a plain integer (no commas, no units); null if not stated
+      "mitigation": string,             // one concise sentence
+      "resolution_time_utc": string,    // 24-hour HH:MM; "" if not stated
+      "duration_minutes": integer | null, // total minutes from detection to resolution if stated or directly derivable; otherwise null
+      "owning_team": string,            // team that owns the corrective action; "" if not stated
+      "corrective_action": string,      // one concise sentence
+      "target_date": string             // committed completion date as written, e.g. "fifteenth of August"; "" if not stated
+    }
+  ]
+}
+
+Rules:
+- Output one array element per distinct incident, in the order they appear in the document.
+- Use the exact field names and types shown above. Include every field for every incident.
+- For any string field with no value in the document, use "" (an empty string). For the two nullable integer fields (affected_count, duration_minutes), use null when not stated or not derivable.
+- affected_count is the single headline count of affected customers, orders, transactions, or messages stated for that incident; if several counts appear, use the principal impacted count. Strip commas and units to a plain integer (e.g. "1,400 order submissions" -> 1400).
+- Do not infer values, do not summarize across incidents, and do not add any field not listed in the schema. Extract only what the document explicitly states.
+
+=== INCIDENT REPORT ===

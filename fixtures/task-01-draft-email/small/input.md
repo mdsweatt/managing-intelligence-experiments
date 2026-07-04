@@ -1,0 +1,1 @@
+Our vendor Meridian Logistics missed the agreed March 15 delivery for the warehouse racking order, the second slip this quarter. Write to their account manager, Dana Pearson, requesting a firm revised delivery date and a written explanation for the repeated delays by Friday.

@@ -1,0 +1,58 @@
+# fixtures/manifest-phase1c.yaml — Experiment 1c fixture registry (the Determinism A/B).
+#
+# A dedicated manifest so the Phase-1a registry (fixtures/manifest.yaml) stays pristine. Run with:
+#   uv run python -m harness.run --matrix runs/phase1c.yaml \
+#       --manifest fixtures/manifest-phase1c.yaml --skill-manifest fixtures/skills/manifest.yaml
+#
+# Design (charter §3b, judge spec §5): the skill-off arm is a CALIBRATED-REALISTIC baseline (a
+# natural user request) so a positive H5 measures *scaffolding*, not the verbosity confound. The
+# skill (skills/manifest.yaml) supplies the structure on the skill-on arm. The frozen Phase-1a
+# *input* artifacts (blurb, brief) are REUSED verbatim; only the instruction (prompt) is new+loose.
+#
+# MIXED design: #4 (placebo) keeps its frozen Phase-1a constrained prompt (classification needs its
+# label definitions to be a valid task), so its skill is a redundant procedure that should do
+# nothing. #6/#9 get the loose baselines below.
+#
+# STATUS: FROZEN 2026-06-27. #4 reuses the frozen Phase-1a fixture; #6/#9 loose baselines are now
+# frozen (sha256 pinned via harness.hashing.fixture_hash, frozen:true). The per-tokenizer
+# `recorded_token_counts` were MEASURED 2026-06-28 via the free count_tokens endpoint (skill-off
+# input, both tokenizers) at the cost-estimate step: they are a COST-ESTIMATION input, NOT part of
+# the content freeze (the hash is), and #6/#9 are output-axis so input counts don't define the band.
+# proxy.value for #6/#9 is the loose-fixture INPUT word count (prompt + reused blurb/brief): the
+# loose baseline sets no target-output proxy (unlike Phase-1a's output-target words), so the input
+# artifact size is the only measurable model-independent selector for the S band here.
+schema_version: 2
+fixtures:
+  # --- #4 classify_triage (PLACEBO) — reuse the frozen Phase-1a constrained prompt verbatim ------
+  - task_id: 4
+    band: S
+    cost_axis: input
+    proxy: { type: words, value: 62 }
+    files: { prompt: task-04-classify-triage/small/prompt.txt }
+    recorded_token_counts: { tok_hs: 273, tok_opus: 386 }
+    sha256: 38c328e4ef3eee33968bef8d52369a77d433b9978c670d78de79914059c0a302
+    frozen: true
+
+  # --- #6 short_form_copy — calibrated-loose baseline (new prompt + REUSED frozen blurb) ----------
+  - task_id: 6
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 63 }       # loose-fixture input words (prompt+blurb); no target-output proxy on the loose arm
+    files:
+      prompt: task-06-short-form-copy/small-loose/prompt.txt
+      input: task-06-short-form-copy/small/input.md      # frozen Phase-1a blurb, reused verbatim
+    recorded_token_counts: { tok_hs: 92, tok_opus: 140 }    # MEASURED 2026-06-28 (free count_tokens, skill-off input); cost-estimation input, not part of the freeze
+    sha256: 57db3cd27b9ce1ceaf21f1d0c50d7673dd25634dd51c0bd17aff315b667c07b6
+    frozen: true
+
+  # --- #9 long_form_draft — calibrated-loose baseline (new prompt + REUSED frozen brief) ----------
+  - task_id: 9
+    band: S
+    cost_axis: output
+    proxy: { type: words, value: 101 }      # loose-fixture input words (prompt+brief); no target-output proxy on the loose arm
+    files:
+      prompt: task-09-long-form-draft/small-loose/prompt.txt
+      input: task-09-long-form-draft/small/input.md       # frozen Phase-1a brief, reused verbatim
+    recorded_token_counts: { tok_hs: 145, tok_opus: 228 }   # MEASURED 2026-06-28 (free count_tokens, skill-off input); cost-estimation input, not part of the freeze
+    sha256: 3b68215bf10ad6d799fa23f3125f883fc9035c69d73de88b6fdf072271f509f9
+    frozen: true

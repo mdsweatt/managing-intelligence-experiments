@@ -1,0 +1,15 @@
+I'm naming a new B2B app that turns messy meeting notes into tracked action items for small teams. Give me 8 candidate product names — modern and easy to say, not generic. Avoid putting "AI" in the name. One per line, no explanations.
+===TURN===
+I like the short, invented-word ones best. Drop anything that sounds like an existing well-known tool. From the survivors, pick your top 3 and write a one-line tagline (under 8 words) for each.
+===TURN===
+Let's go with the first of those three. Give me 3 tagline variations for it in three different tones — confident, playful, and understated. One line each, label the tone.
+===TURN===
+The confident one wins. Write a homepage hero for it: a headline under 10 words, plus one supporting sentence under 25 words.
+===TURN===
+The supporting sentence is too jargon-y. Rewrite it for a non-technical founder — warm and concrete, no buzzwords — keeping the same length limit.
+===TURN===
+Add a one-line contrast against the status quo, starting "Unlike endless to-do apps,". Keep it under 15 words.
+===TURN===
+Write a launch post for X/Twitter, max 280 characters, using the product name and the confident tagline. At most one hashtag.
+===TURN===
+Summarize the final brand kit: product name, chosen tagline, hero headline and supporting sentence, the contrast line, and the launch post. Just the kit, clearly labeled.

@@ -1,0 +1,65 @@
+# runs/phase1c.yaml — Experiment 1, Phase 1c: the Determinism A/B (tests H5, H6)
+# Machine form of docs/SPEC.md §Phase-1c. The harness consumes THIS, not the markdown.
+#
+# A 2×3 factorial: skill {off, on} × model {haiku, sonnet, opus}. Each (task, band) emits 6 cells
+# (3 models × 2 skill arms); N=20/cell, uniform with 1a. Reuses the Phase-1a model ladder; adds the
+# skill axis (fixtures/skills/manifest.yaml) and, downstream, a frozen quality judge.
+#
+# FIXTURES: a DEDICATED registry, fixtures/manifest-phase1c.yaml — pass it explicitly:
+#   uv run python -m harness.run --matrix runs/phase1c.yaml \
+#       --manifest fixtures/manifest-phase1c.yaml --skill-manifest fixtures/skills/manifest.yaml
+# The skill-off arm is a CALIBRATED-REALISTIC baseline (a natural user request) so a positive H5
+# measures *scaffolding*, not a verbosity confound (charter §3b; judge spec §5). #6/#9 use new loose
+# prompts that REUSE the frozen Phase-1a input blurb/brief; #4 (placebo) keeps its frozen Phase-1a
+# constrained prompt (classification needs its label set). See charter §3 (H5/H6) + the v0.6 log.
+#
+# NOTE: skills + #6/#9 loose baselines are FROZEN (2026-06-27). Gate status (2026-06-28): the cost
+# estimate is DONE (cost_ceiling_usd finalized below; analysis/output/phase1c-cost-estimate.md) and
+# the quality JUDGE is FROZEN (docs/phase1c-judge-spec.md; fixtures/judge/manifest.yaml).
+# RAN 2026-06-28 → results/run-20260628T051203Z-53aa02 (360 records, all end_turn, 0 quarantined,
+# measured $2.94 vs $15 ceiling). Judge ran (analysis/quality.py --run-judge). Outcomes: H5 nuanced
+# (skill cuts output CoV on #6 + #9-sonnet/opus, raises mean output on long-form #9; #4 placebo flat),
+# H6 rejected (Opus still preferred over Haiku 12-1 on #6 skill-on). See charter §0 state-note
+# 2026-06-28 + analysis/output/{h5_determinism.csv, quality-findings.md}.
+
+meta:
+  phase: "1c"
+  derived_from: docs/SPEC.md
+  n_per_cell: 20                         # flat, pre-committed, uniform with 1a. Never extend per-cell.
+  universal_opus_status: included        # Opus is a factorial arm here, not a gated over-service add-on
+  gate: runs/phase0-calibration.yaml
+  cost_ceiling_usd: 15                   # FINALIZED 2026-06-28 from the micro-pilot projection (conservative bound $4.69, point $2.96 for ~360 calls) — keeps ~3x margin. See analysis/output/phase1c-cost-estimate.md
+  verified_live: 2026-06-16              # docs/live-verification-2026-06-16.md (re-verify on model release)
+  rate_tier: { itpm: 450000, otpm: 90000, rpm: 1000, as_of: 2026-06-22 }
+
+defaults:
+  max_tokens: model_ceiling              # set to model max output; never omit. STREAM every call.
+  temperature: omit                      # never send it (constitution; verified 2026-06-16)
+  effort: high                           # Sonnet/Opus factorial arms; Haiku has no effort knob
+
+# Inert for Phase 1c: the model crossing IS the comparison (factorial), not an over-service swap.
+# Required by the RunMatrix schema, so kept as a no-op marker.
+over_service:
+  rule: not_applicable_factorial
+  optional_as_used: false
+
+# VERIFIED LIVE 2026-06-16. tokenizer: tok-hs = Haiku+Sonnet (shared); tok-opus differs ~+35%.
+models:
+  haiku:  { id: claude-haiku-4-5-20251001, tokenizer: tok-hs,   cache_min: 4096, max_output: 64000 }
+  sonnet: { id: claude-sonnet-4-6,         tokenizer: tok-hs,   cache_min: 1024, max_output: 128000 }
+  opus:   { id: claude-opus-4-8,           tokenizer: tok-opus, cache_min: 1024, max_output: 128000 }
+
+# Each task crosses `factorial_models` with skill {off,on}. `skill` references a frozen entry in
+# fixtures/skills/manifest.yaml. Fixtures are the SAME frozen Phase-1a artifacts (same prompt+input).
+tasks:
+  # Placebo control — already deterministic (~0% CoV in 1a). The skill should NOT move it (H5 guard):
+  # if it "tightens" here too, the effect is a confound, not the skill.
+  - { id: 4, name: classify_triage,  cost_axis: input,  bands: [S],
+      factorial_models: [haiku, sonnet, opus], skill: classify-triage-scaffold-v1 }
+
+  # High output-latitude — where Lever A should bite (H5) and the Haiku→Opus quality gap should
+  # close (H6):
+  - { id: 6, name: short_form_copy,  cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], skill: short-form-copy-scaffold-v1 }
+  - { id: 9, name: long_form_draft,  cost_axis: output, bands: [S],
+      factorial_models: [haiku, sonnet, opus], skill: long-form-draft-scaffold-v1 }

@@ -1,0 +1,36 @@
+# prices/prices-2026-06.yaml — per-model token prices ($ per 1M tokens)
+#
+# The ONLY place dollars live. Applied at ANALYSIS time only (charter §4 — denominate in tokens).
+# Updating prices must never touch a token count or a stored record.
+#
+# Verified LIVE 2026-06-25 against the published pricing page (see `source`); base input/output
+# cross-checked against the models-overview doc. Component prices are NOT fungible: cache-read « fresh
+# input, cache-write > fresh input, output > input. The dollar-weighted composite prices the three
+# input components (input / cache_read / cache_creation — mutually exclusive, additive) plus output;
+# `thinking` = output because thinking tokens bill at the output rate AND are already counted inside
+# output_tokens (so the composite must NOT add them again — `thinking` here is for localization only).
+
+currency: USD
+unit: per_million_tokens
+as_of: 2026-06-25                # date pricing was pulled (verified live)
+source: https://platform.claude.com/docs/en/about-claude/pricing   # +models/overview for base rates
+
+models:
+  claude-haiku-4-5-20251001:
+    input: 1.00
+    output: 5.00
+    cache_read: 0.10
+    cache_write_5m: 1.25         # 5m TTL (the TTL actually used in cells #10–12)
+    thinking: 5.00               # = output (thinking billed as output; already inside output_tokens)
+  claude-sonnet-4-6:
+    input: 3.00
+    output: 15.00
+    cache_read: 0.30
+    cache_write_5m: 3.75
+    thinking: 15.00
+  claude-opus-4-8:
+    input: 5.00
+    output: 25.00
+    cache_read: 0.50
+    cache_write_5m: 6.25
+    thinking: 25.00

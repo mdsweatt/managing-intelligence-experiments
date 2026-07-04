@@ -1,0 +1,1 @@
+Write one promotional post for LinkedIn announcing the product described in the blurb below. Constraints: maximum 60 words; professional but warm B2B tone; open with a one-line hook; include exactly one call to action inviting readers to book a demo; end with 2-3 relevant hashtags. Output only the finished post text, no preamble, no alternatives, no explanation.
