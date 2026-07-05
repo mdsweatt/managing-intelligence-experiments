@@ -119,7 +119,10 @@ Cross-check the printed tables against the committed `analysis/output/**/*.csv`.
   the published records; token counts, timing, hashes, and model outputs are untouched. Two
   fixture inputs are third-party copyrighted works replaced by `WITHHELD.md` stubs carrying
   their sha256 (the frozen-manifest hashes remain verifiable); no published record contains
-  their text.
+  their text. The provider billing export
+  (`analysis/output/claude_api_cost_2026_06_18_to_2026_07_05.csv`) has one redaction: the name
+  of an unrelated project's API key (all-$0 rows, retained as scope evidence) — see
+  `analysis/output/billing-export-note.md`.
 - **Licensing:** code MIT (`LICENSE`); data + documents CC BY 4.0 (`LICENSE-DATA`). Cite via
   `CITATION.cff`.
 - **Method note:** experiments were designed and operated by the author working with Claude

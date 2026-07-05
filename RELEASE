@@ -1,2 +1,4 @@
 Public release mirror of the private lab repo at a0bbe146df25d9c8b9c1e340ef11e065f06a06bc
 built by scripts/build_public_mirror.py — see README 'Provenance & licensing'.
+Addendum 2026-07-04: scrubbed provider billing export + note (analysis/output/) and the
+README redaction bullet added from private commit ab9e4c4.
