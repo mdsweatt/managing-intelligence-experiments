@@ -10,7 +10,11 @@ Produces a curated copy of the tracked tree with the publication transforms appl
      results/*/records.jsonl, batch job names in analysis/output/phase1d/batch/.
 
 Usage:  uv run python scripts/build_public_mirror.py /path/to/mirror-dir
-The target must not exist. git init/commit of the mirror is a manual step after review.
+        uv run python scripts/build_public_mirror.py --update /path/to/existing-mirror
+
+Fresh mode: the target must not exist. Update mode: the target must be an existing git
+working copy (e.g. the public mirror checkout); its contents are replaced wholesale from a
+fresh build, .git preserved. git commit/tag of the mirror is a manual step after review.
 """
 
 from __future__ import annotations
@@ -27,6 +31,7 @@ EXCLUDE = [
     "docs/phase1b-ab-budget-internal.md",
     "docs/phase5-run-loop-design.md",
     "docs/phase5-run-loop-implementation-plan.md",
+    "docs/blog/2026-07-the-meter-and-the-judge.md",  # blog post text publishes on mikescorner.io, not in the mirror
 ]
 
 WITHHELD = {
@@ -55,19 +60,10 @@ frozen hash, obtain the work from its publisher and check the sha256 above.
 """
 
 
-def main() -> int:
-    if len(sys.argv) != 2:
-        print(__doc__)
-        return 2
-    target = Path(sys.argv[1])
-    if target.exists():
-        print(f"refusing: {target} already exists")
-        return 2
-    root = Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], check=True,
-                               capture_output=True, text=True).stdout.strip())
-
+def build_tree(target: Path, root: Path) -> str:
+    """Build the transformed mirror tree into `target` (created if needed); return source HEAD."""
     # 1. export tracked tree at HEAD (untracked/ignored content can never leak)
-    target.mkdir(parents=True)
+    target.mkdir(parents=True, exist_ok=True)
     tar_bytes = subprocess.run(["git", "-C", str(root), "archive", "HEAD"],
                                check=True, capture_output=True).stdout
     with tarfile.open(fileobj=io.BytesIO(tar_bytes)) as tf:
@@ -134,6 +130,41 @@ def main() -> int:
         f"Public release mirror of the private lab repo at {head}\n"
         f"built by scripts/build_public_mirror.py — see README 'Provenance & licensing'.\n",
         encoding="utf-8")
+    return head
+
+
+def main() -> int:
+    args = sys.argv[1:]
+    update = "--update" in args
+    if update:
+        args.remove("--update")
+    if len(args) != 1:
+        print(__doc__)
+        return 2
+    target = Path(args[0])
+    root = Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], check=True,
+                               capture_output=True, text=True).stdout.strip())
+    if update:
+        if not (target / ".git").is_dir():
+            print(f"refusing --update: {target} is not an existing git working copy")
+            return 2
+        import tempfile, shutil
+        tmp = Path(tempfile.mkdtemp(prefix="mirror-"))
+        head = build_tree(tmp, root)
+        for child in target.iterdir():           # clear everything except .git
+            if child.name == ".git":
+                continue
+            shutil.rmtree(child) if child.is_dir() else child.unlink()
+        for child in tmp.iterdir():              # move new tree in
+            shutil.move(str(child), target / child.name)
+        tmp.rmdir()
+        print(f"\nmirror working copy refreshed from HEAD {head[:10]}")
+        print(f"next: review `git -C {target} status`, commit as a release, tag, push.")
+        return 0
+    if target.exists():
+        print(f"refusing: {target} already exists")
+        return 2
+    head = build_tree(target, root)
     print(f"\nmirror tree ready: {target}  (source HEAD {head[:10]})")
     print("next: review, then git init + commit inside the mirror, add remote, push.")
     return 0
