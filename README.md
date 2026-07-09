@@ -105,6 +105,7 @@ could be retrofitted after the fact:
 ```
 CLAUDE.md      the measurement rules ("constitution")
 docs/          charter (hypotheses), SPEC (run matrix), the phase reports, prior-art scan
+docs/presentations/  slide decks — the Phase 1a report deck and the "Budgeting AI Work" deck
 fixtures/      the frozen, hashed task inputs + prompts; skills/ = the output templates
 harness/       the Python measurement engine (API caller, capture contract, spend ceiling)
 runs/          machine-readable run matrices the harness executes (phase0/1a/1c/1d.yaml)
